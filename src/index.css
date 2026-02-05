@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+  --color-surface: rgb(var(--surface));
+  --color-primary: rgb(var(--primary));
+  --color-secondary: rgb(var(--secondary));
+}
+
+:root {
+  --background: 255 255 255;
+  --foreground: 31 41 55;
+  --surface: 245 245 245;
+  --primary: 124 58 237;
+  --secondary: 6 182 212;
+}
+
+.dark {
+  --background: 3 7 18;
+  --foreground: 249 250 251;
+  --surface: 17 24 39;
+  --primary: 139 92 246;
+  --secondary: 34 211 238;
+}
+
+@layer base {
+  body {
+    background-color: rgb(var(--background));
+    color: rgb(var(--foreground));
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

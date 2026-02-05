@@ -1,0 +1,133 @@
+import { NavLink, useLocation } from 'react-router-dom'
+import { LayoutDashboard, History, PieChart, Settings, LogOut, Plus } from 'lucide-react'
+import { useAuth } from '../../contexts/AuthContext'
+import { useState } from 'react'
+import { TransactionGlassMenu } from '../transactions/TransactionGlassMenu'
+
+export function Navbar() {
+    const { signOut } = useAuth()
+    const location = useLocation()
+    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false)
+
+    // Hide mobile nav on settings sub-pages (e.g. /settings/accounts)
+    // But show on /settings (the menu hub)
+    const isSubSettings = location.pathname.startsWith('/settings/') && location.pathname !== '/settings'
+
+    const navItems = [
+        { to: '/', icon: LayoutDashboard, label: 'Home' },
+        { to: '/timeline', icon: History, label: 'Transações' },
+        { to: '/budgets', icon: PieChart, label: 'Orçamentos' },
+        { to: '/settings', icon: Settings, label: 'Configurações' },
+    ]
+
+    const handleCreateTransaction = (type: string) => {
+        console.log('Create transaction:', type)
+        // Navigate or open form modal
+    }
+
+    return (
+        <>
+            <TransactionGlassMenu
+                isOpen={isTransactionModalOpen}
+                onClose={() => setIsTransactionModalOpen(false)}
+                onSelectType={handleCreateTransaction}
+            />
+
+            {/* Mobile Bottom Nav - Hidden on Settings Sub-pages */}
+            {!isSubSettings && (
+                <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 safe-area-bottom pb-safe z-50">
+                    <div className="flex justify-around items-center h-16 px-2">
+                        {/* First 2 items */}
+                        {navItems.slice(0, 2).map(({ to, icon: Icon, label }) => (
+                            <NavLink
+                                key={to}
+                                to={to}
+                                className={({ isActive }) =>
+                                    `flex flex-col items-center justify-center w-full h-full transition-colors ${isActive
+                                        ? 'text-blue-600'
+                                        : 'text-slate-500 hover:text-slate-700'
+                                    }`
+                                }
+                            >
+                                <Icon size={24} strokeWidth={2} />
+                                <span className="text-[10px] font-medium mt-1">{label}</span>
+                            </NavLink>
+                        ))}
+
+                        {/* Middle Plus Button */}
+                        <div className="relative -top-5">
+                            <button
+                                onClick={() => setIsTransactionModalOpen(true)}
+                                className="flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700 transition-transform active:scale-95"
+                            >
+                                <Plus size={32} strokeWidth={2.5} />
+                            </button>
+                        </div>
+
+                        {/* Last 2 items */}
+                        {navItems.slice(2).map(({ to, icon: Icon, label }) => (
+                            <NavLink
+                                key={to}
+                                to={to}
+                                className={({ isActive }) =>
+                                    `flex flex-col items-center justify-center w-full h-full transition-colors ${isActive
+                                        ? 'text-blue-600'
+                                        : 'text-slate-500 hover:text-slate-700'
+                                    }`
+                                }
+                            >
+                                <Icon size={24} strokeWidth={2} />
+                                <span className="text-[10px] font-medium mt-1">{label}</span>
+                            </NavLink>
+                        ))}
+                    </div>
+                </nav>
+            )}
+
+            {/* Desktop Sidebar */}
+            ...
+            <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 bottom-0 bg-white border-r border-slate-200 p-4">
+                <div className="mb-8 px-4 py-2">
+                    <h1 className="text-xl font-bold text-blue-600">FamilyCash</h1>
+                </div>
+
+                {/* New Transaction Button */}
+                <div className="px-2 mb-6">
+                    <button
+                        onClick={() => setIsTransactionModalOpen(true)}
+                        className="flex items-center justify-center space-x-2 w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 active:scale-95"
+                    >
+                        <Plus size={20} strokeWidth={2.5} />
+                        <span className="font-semibold">Novo</span>
+                    </button>
+                </div>
+
+                <div className="flex flex-col space-y-2 flex-1">
+                    {navItems.map(({ to, icon: Icon, label }) => (
+                        <NavLink
+                            key={to}
+                            to={to}
+                            className={({ isActive }) =>
+                                `flex items-center space-x-3 w-full h-12 px-4 rounded-xl transition-colors ${isActive
+                                    ? 'text-blue-600 bg-blue-50'
+                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                }`
+                            }
+                        >
+                            <Icon size={20} strokeWidth={2} className="w-5 h-5" />
+                            <span className="text-sm font-medium">{label}</span>
+                        </NavLink>
+                    ))}
+                </div>
+
+                <button
+                    onClick={() => signOut()}
+                    className="flex items-center space-x-3 w-full px-4 h-12 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors mt-auto"
+                >
+                    <LogOut size={20} strokeWidth={2} />
+                    <span className="text-sm font-medium">Sair</span>
+                </button>
+            </aside>
+        </>
+    )
+}
