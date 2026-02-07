@@ -3,6 +3,7 @@ import { useFamilyData } from '../hooks/useFamilyData'
 import { format, parseISO, isSameDay } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ArrowDownLeft, ArrowUpRight, CreditCard as CardIcon, Wallet } from 'lucide-react'
+import type { Category } from '../types'
 
 export function Timeline() {
     const { transactions, categories, accounts, cards, loading } = useFamilyData()
@@ -28,7 +29,7 @@ export function Timeline() {
 
     const formatCurrency = (val: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val)
 
-    const getCategoryName = (id: string) => categories.find((c: any) => c.id === id)?.name || 'Sem categoria'
+    const getCategoryName = (id: string) => categories.find((c: Category) => c.id === id)?.name || 'Sem categoria'
     const getAccountName = (id: string | null) => id ? accounts.find(a => a.id === id)?.name : null
     const getCardName = (id: string | null) => id ? cards.find(c => c.id === id)?.name : null
 

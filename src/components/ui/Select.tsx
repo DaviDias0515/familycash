@@ -9,7 +9,7 @@ interface SelectOption {
 interface SelectProps {
     label?: string
     value: string
-    onChange: (value: any) => void
+    onChange: (value: string) => void
     options: SelectOption[]
     placeholder?: string
     error?: string
@@ -34,7 +34,7 @@ export function Select({ label, value, onChange, options, placeholder = "Selecio
     const selectedOption = options.find(opt => opt.value === value)
 
     // Ignore options with empty value if they are just placeholders in the list
-    const activeOptions = options.filter(opt => opt.value !== '')
+    // const activeOptions = options.filter(opt => opt.value !== '')
 
     return (
         <div className="space-y-1 relative" ref={containerRef}>

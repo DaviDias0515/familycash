@@ -48,14 +48,14 @@ export function AccountForm({ onSuccess, onCancel }: AccountFormProps) {
                     console.error('Error fetching members:', error)
                 }
             })
-    }, [profile?.family_id, profile?.id])
+    }, [profile?.family_id, profile?.id, ownerId])
 
     // Ensure ownerId is set once profile is loaded
     useEffect(() => {
         if (profile?.id && !ownerId) {
             setOwnerId(profile.id)
         }
-    }, [profile?.id])
+    }, [profile?.id, ownerId])
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -79,8 +79,12 @@ export function AccountForm({ onSuccess, onCancel }: AccountFormProps) {
             if (insertError) throw insertError
 
             onSuccess()
-        } catch (err: any) {
-            setError(err.message)
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message)
+            } else {
+                setError('Ocorreu um erro desconhecido')
+            }
         } finally {
             setLoading(false)
         }

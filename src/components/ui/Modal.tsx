@@ -14,8 +14,12 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
 
     useEffect(() => {
         if (isOpen) {
-            setIsVisible(true)
+            // Small delay to ensure render before animation starts
+            const timer = requestAnimationFrame(() => {
+                setIsVisible(true)
+            })
             document.body.style.overflow = 'hidden'
+            return () => cancelAnimationFrame(timer)
         } else {
             const timer = setTimeout(() => setIsVisible(false), 200)
             document.body.style.overflow = 'unset'

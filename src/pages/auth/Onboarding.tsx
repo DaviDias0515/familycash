@@ -74,8 +74,12 @@ export function Onboarding() {
             if (linkError) throw linkError
 
             window.location.href = '/'
-        } catch (err: any) {
-            setError(err.message)
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message)
+            } else {
+                setError('Ocorreu um erro desconhecido')
+            }
         } finally {
             setLoading(false)
         }
@@ -111,8 +115,12 @@ export function Onboarding() {
             if (profileError) throw profileError
 
             navigate('/')
-        } catch (err: any) {
-            setError(err.message)
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message)
+            } else {
+                setError('Ocorreu um erro desconhecido')
+            }
         } finally {
             setLoading(false)
         }

@@ -1,10 +1,10 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import { Plus, CreditCard, ChevronLeft } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui'
 
 export function SettingsCards() {
-    const [showForm, setShowForm] = useState(false)
+    // const [showForm, setShowForm] = useState(false)
 
     return (
         <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300 pb-24 md:pb-0">
@@ -25,7 +25,7 @@ export function SettingsCards() {
 
                 {/* Desktop Button */}
                 <div className="hidden md:block">
-                    <Button variant="outline" onClick={() => setShowForm(true)} className="py-2">
+                    <Button variant="outline" onClick={() => {/* setShowForm(true) */ }} className="py-2">
                         <Plus className="w-4 h-4 mr-1" />
                         Novo Cartão
                     </Button>
@@ -38,7 +38,7 @@ export function SettingsCards() {
 
             {/* Mobile FAB */}
             <button
-                onClick={() => setShowForm(true)}
+                onClick={() => {/* setShowForm(true) */ }}
                 className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-amber-500 text-white rounded-full shadow-lg shadow-amber-500/30 flex items-center justify-center active:scale-95 transition-transform z-50"
             >
                 <Plus size={32} strokeWidth={2.5} />

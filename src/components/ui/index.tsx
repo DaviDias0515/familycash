@@ -43,4 +43,4 @@ export function Input({ label, error, className = '', ...props }: InputProps) {
         </div>
     )
 }
-export * from './Select'
+export { Select } from './Select'

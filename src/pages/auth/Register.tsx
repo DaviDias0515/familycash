@@ -35,8 +35,12 @@ export function Register() {
                 setError('Verifique seu email para confirmar o cadastro.')
             }
 
-        } catch (err: any) {
-            setError(err.message || 'Erro ao criar conta')
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message || 'Erro ao criar conta')
+            } else {
+                setError('Erro ao criar conta')
+            }
         } finally {
             setLoading(false)
         }

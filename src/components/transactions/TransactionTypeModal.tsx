@@ -42,7 +42,7 @@ export function TransactionTypeModal({ isOpen, onClose, onSelectType }: Transact
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Nova Transação">
             <div className="flex flex-col">
-                {types.map((type, index) => (
+                {types.map((type) => (
                     <button
                         key={type.id}
                         onClick={() => {

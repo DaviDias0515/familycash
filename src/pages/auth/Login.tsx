@@ -23,8 +23,12 @@ export function Login() {
 
             if (error) throw error
             navigate('/')
-        } catch (err: any) {
-            setError(err.message || 'Erro ao realizar login')
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message || 'Erro ao realizar login')
+            } else {
+                setError('Erro ao realizar login')
+            }
         } finally {
             setLoading(false)
         }

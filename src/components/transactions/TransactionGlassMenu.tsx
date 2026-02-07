@@ -13,8 +13,11 @@ export function TransactionGlassMenu({ isOpen, onClose, onSelectType }: Transact
 
     useEffect(() => {
         if (isOpen) {
-            setIsVisible(true)
+            const timer = requestAnimationFrame(() => {
+                setIsVisible(true)
+            })
             document.body.style.overflow = 'hidden'
+            return () => cancelAnimationFrame(timer)
         } else {
             const timer = setTimeout(() => setIsVisible(false), 300)
             document.body.style.overflow = 'unset'
