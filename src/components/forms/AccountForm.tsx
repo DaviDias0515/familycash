@@ -107,7 +107,7 @@ export function AccountForm({ onSuccess, onCancel }: AccountFormProps) {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {error && <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">{error}</div>}
+            {error && <div className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 p-3 rounded-lg">{error}</div>}
 
             <Input
                 label="Nome da Conta"
@@ -131,7 +131,7 @@ export function AccountForm({ onSuccess, onCancel }: AccountFormProps) {
                     onChange={(val) => setOwnerId(val)}
                     options={memberOptions}
                 />
-                <p className="text-xs text-slate-500 ml-1">Quem é o dono principal desta conta?</p>
+                <p className="text-xs text-slate-400 ml-1">Quem é o dono principal desta conta?</p>
             </div>
 
             <Input
@@ -146,7 +146,7 @@ export function AccountForm({ onSuccess, onCancel }: AccountFormProps) {
 
             <div className="flex space-x-3 pt-4">
                 <Button type="button" variant="ghost" onClick={onCancel} className="flex-1">Cancelar</Button>
-                <Button type="submit" isLoading={loading} className="flex-1">Salvar</Button>
+                <Button type="submit" isLoading={loading} className="flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50">Salvar</Button>
             </div>
         </form>
     )

@@ -59,22 +59,24 @@ export function CategoryFormModal({ isOpen, onClose, onSuccess }: CategoryFormMo
 
     return (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
 
-            <div className="relative w-full max-w-sm bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-sm bg-surface border border-white/10 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                            <span className="text-purple-500"><Tag /></span>
+                        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                            <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/20 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                                <Tag className="text-purple-400" />
+                            </div>
                             Nova Categoria
                         </h2>
-                        <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 bg-slate-100 dark:bg-slate-800 rounded-full transition-colors">
+                        <button onClick={onClose} className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors">
                             <X size={20} />
                         </button>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        {error && <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">{error}</div>}
+                        {error && <div className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 p-3 rounded-lg">{error}</div>}
 
                         <Input
                             label="Nome"
@@ -95,7 +97,7 @@ export function CategoryFormModal({ isOpen, onClose, onSuccess }: CategoryFormMo
                             <Button type="button" variant="ghost" onClick={onClose} className="flex-1">
                                 Cancelar
                             </Button>
-                            <Button type="submit" isLoading={loading} className="flex-1 bg-purple-600 hover:bg-purple-700">
+                            <Button type="submit" isLoading={loading} className="flex-1 bg-gradient-to-r from-purple-600 to-purple-500 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50">
                                 Salvar
                             </Button>
                         </div>

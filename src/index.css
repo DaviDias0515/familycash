@@ -3,59 +3,57 @@
 @theme {
   --font-sans: 'Inter', sans-serif;
 
-  /* Mapping CSS variables to Tailwind colors */
-  --color-background: rgb(var(--background));
-  --color-foreground: rgb(var(--foreground));
-  --color-surface: rgb(var(--surface));
-  --color-surface-glass: rgb(var(--surface-glass));
-  --color-primary: rgb(var(--primary));
-  --color-secondary: rgb(var(--secondary));
+  /* Color Palette - derived from Design System variables */
+  --color-background: rgb(9 9 11);
+  --color-foreground: rgb(250 250 250);
+  --color-surface: rgb(24 24 27);
+  --color-surface-glass: rgb(24 24 27 / 0.6);
+  --color-primary: rgb(34 211 238);
+  /* Cyan 400 */
+  --color-secondary: rgb(217 70 239);
+  /* Fuchsia 500 */
+
+  --color-neon-blue: rgb(6 182 212);
+  /* Cyan 500 equivalent for variety if needed, or match primary */
+  --color-neon-purple: rgb(168 85 247);
+  /* Purple 500 */
+  --color-neon-green: rgb(16 185 129);
+  /* Emerald 500 */
 }
 
 :root {
-  /* Cyber Dark Configuration (Default) */
+  /* CSS Variables for usage outside @theme if necessary, but @theme handles the mapping in TW4 */
   --background: 9 9 11;
-  /* Gray 950 (Rich Black) */
   --foreground: 250 250 250;
-  /* Zinc 50 */
   --surface: 24 24 27;
-  /* Zinc 950 (Dark Metal) */
-  --surface-glass: 24 24 27 / 0.6;
-  /* Zinc 950 with alpha */
   --primary: 34 211 238;
-  /* Cyan 400 (Neon Blue) */
   --secondary: 217 70 239;
-  /* Fuchsia 500 (Neon Purple) */
 }
 
-/* Light Mode Overrides (if needed) */
-.light {
-  --background: 248 250 252;
-  --foreground: 15 23 42;
-  --surface: 255 255 255;
-  --surface-glass: 255 255 255 / 0.8;
-  --primary: 8 145 178;
-  --secondary: 192 38 211;
-}
-
-/* Custom Utilities */
 @layer utilities {
   .text-glow {
-    text-shadow: 0 0 10px rgb(var(--primary));
+    text-shadow: 0 0 10px var(--color-primary);
+  }
+
+  .text-neon-blue {
+    color: var(--color-primary);
+    filter: drop-shadow(0 0 5px rgba(34, 211, 238, 0.8));
   }
 
   .box-glow {
-    box-shadow: 0 0 20px -5px rgb(var(--primary) / 0.5);
+    box-shadow: 0 0 20px -5px rgb(34 211 238 / 0.5);
+  }
+
+  .glass-panel {
+    @apply border border-white/10 bg-surface/80 backdrop-blur-xl;
   }
 }
 
 @layer base {
   body {
-    background-color: rgb(var(--background));
-    color: rgb(var(--foreground));
-    font-family: var(--font-sans);
+    @apply bg-background text-foreground font-sans antialiased;
+    /* Basic reset/smoothness */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }

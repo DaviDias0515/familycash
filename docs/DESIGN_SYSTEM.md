@@ -58,3 +58,15 @@ Painéis com borda brilhante e fundo semi-transparente.
   }
 }
 ```
+## 6. Entrada de Transações (Mobile-First)
+
+A criação de transações deve ser imersiva e focada na entrada de dados rápida.
+
+*   **Layout:** Tela Cheia (Full Screen) cobrindo a interface principal.
+*   **Valor:** O campo de valor é o protagonista. Deve ser grande, centralizado ou em destaque no topo.
+*   **Input:** Ao clicar no valor, um **Modal Calculadora** (Bottom Sheet) deve subir.
+    *   Teclado numérico grande e fácil de tocar.
+    *   Botões de ação ("Concluído", "Cancelar") na parte inferior.
+    *   **Auto-Open:** Ao abrir o form, a calculadora deve surgir automaticamente após um breve delay (ex: 300ms) com animação suave.
+*   **Campos Secundários:** Descrição, Categoria, Conta devem vir abaixo do valor, em uma lista vertical limpa.
+*   **Background:** Sólido (`bg-background` ou `bg-surface`) para evitar distrações.

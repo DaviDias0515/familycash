@@ -16,7 +16,7 @@ export function SettingsCategories() {
     const fetchCategories = async () => {
         if (!profile?.family_id) return
         setLoading(true)
-        const { data, error } = await supabase
+        const { data } = await supabase
             .from('categories')
             .select('*')
             .eq('family_id', profile.family_id)
@@ -56,10 +56,10 @@ export function SettingsCategories() {
     }
 
     const colors: Record<string, string> = {
-        income: 'text-emerald-500 bg-emerald-50 border-emerald-100',
-        expense: 'text-rose-500 bg-rose-50 border-rose-100',
-        credit_card: 'text-amber-500 bg-amber-50 border-amber-100',
-        transfer: 'text-blue-500 bg-blue-50 border-blue-100'
+        income: 'text-emerald-400 bg-emerald-500/10 shadow-[0_0_10px_rgba(52,211,153,0.2)]',
+        expense: 'text-rose-400 bg-rose-500/10 shadow-[0_0_10px_rgba(251,113,133,0.2)]',
+        credit_card: 'text-amber-400 bg-amber-500/10 shadow-[0_0_10px_rgba(251,191,36,0.2)]',
+        transfer: 'text-blue-400 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.2)]'
     }
 
     return (
@@ -69,18 +69,18 @@ export function SettingsCategories() {
                 <div className="flex items-center">
                     <Link
                         to="/settings"
-                        className="p-1 -ml-1 mr-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors"
+                        className="p-1 -ml-1 mr-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
                     >
                         <ChevronLeft className="w-6 h-6" />
                     </Link>
-                    <h2 className="text-lg font-bold text-slate-900 flex items-center">
-                        <Tag className="w-5 h-5 mr-2 text-slate-500" />
+                    <h2 className="text-lg font-bold text-white flex items-center">
+                        <Tag className="w-5 h-5 mr-2 text-purple-400" />
                         Categorias
                     </h2>
                 </div>
 
                 <div className="hidden md:block">
-                    <Button variant="outline" onClick={() => {/* setShowForm(true) */ }} className="py-2">
+                    <Button variant="outline" onClick={() => setShowForm(true)} className="py-2">
                         <Plus className="w-4 h-4 mr-1" />
                         Nova Categoria
                     </Button>
@@ -96,9 +96,9 @@ export function SettingsCategories() {
             {loading ? (
                 <div className="text-center py-10 text-slate-400">Carregando...</div>
             ) : categories.length === 0 ? (
-                <div className="text-center py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                <div className="text-center py-12 bg-white/5 rounded-xl border border-dashed border-white/10">
                     <p className="text-slate-500">Nenhuma categoria encontrada.</p>
-                    <Button variant="ghost" className="mt-2 text-purple-600" onClick={() => setShowForm(true)}>Criar primeira categoria</Button>
+                    <Button variant="ghost" className="mt-2 text-purple-400" onClick={() => setShowForm(true)}>Criar primeira categoria</Button>
                 </div>
             ) : (
                 <div className="space-y-6">
@@ -113,16 +113,16 @@ export function SettingsCategories() {
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                     {items.map(cat => (
-                                        <div key={cat.id} className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-shadow group">
+                                        <div key={cat.id} className="flex items-center justify-between p-3 bg-surface border border-white/5 rounded-xl shadow-sm hover:bg-white/5 transition-colors group">
                                             <div className="flex items-center gap-3">
                                                 <div className={`p-2 rounded-lg ${colors[key]}`}>
                                                     <Tag size={16} />
                                                 </div>
-                                                <span className="font-medium text-slate-700">{cat.name}</span>
+                                                <span className="font-medium text-white">{cat.name}</span>
                                             </div>
                                             <button
                                                 onClick={() => handleDelete(cat.id, cat.name)}
-                                                className="p-2 text-slate-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                                className="p-2 text-slate-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
                                             >
                                                 <Trash2 size={16} />
                                             </button>
@@ -137,8 +137,8 @@ export function SettingsCategories() {
 
             {/* Mobile FAB */}
             <button
-                onClick={() => {/* setShowForm(true) */ }}
-                className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-purple-600 text-white rounded-full shadow-lg shadow-purple-600/30 flex items-center justify-center active:scale-95 transition-transform z-50"
+                onClick={() => setShowForm(true)}
+                className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-purple-600 to-purple-500 text-white rounded-full shadow-[0_0_20px_rgba(168,85,247,0.4)] flex items-center justify-center active:scale-95 transition-transform z-50"
             >
                 <Plus size={32} strokeWidth={2.5} />
             </button>

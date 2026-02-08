@@ -11,16 +11,16 @@ export function SettingsAccountCreate() {
             <div className="flex items-center mb-6">
                 <Link
                     to="/settings/accounts"
-                    className="p-1 -ml-1 mr-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors"
+                    className="p-1 -ml-1 mr-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
                 >
                     <ChevronLeft className="w-6 h-6" />
                 </Link>
-                <h2 className="text-xl font-bold text-slate-900">
+                <h2 className="text-xl font-bold text-white">
                     Nova Conta
                 </h2>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <div className="bg-surface p-6 rounded-2xl border border-white/5 shadow-sm">
                 <AccountForm
                     onSuccess={() => {
                         // In a real app we'd invalidate cache here

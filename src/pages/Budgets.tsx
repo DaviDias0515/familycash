@@ -39,43 +39,44 @@ export function Budgets() {
 
     const formatCurrency = (val: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val)
 
-    if (loading) return <div className="p-4 text-center text-slate-500">Carregando orçamentos...</div>
+    if (loading) return <div className="p-4 text-center text-slate-400 animate-pulse">Carregando orçamentos...</div>
 
     return (
         <div className="space-y-6">
             <header className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-slate-900">Orçamentos Mensais</h1>
+                <h1 className="text-2xl font-bold text-white text-glow">Orçamentos Mensais</h1>
                 {/* Placeholder for Add Budget */}
             </header>
 
             {budgetProgress.length === 0 && (
-                <div className="p-8 text-center bg-white rounded-2xl border border-dashed border-slate-200">
+                <div className="p-8 text-center bg-white/5 rounded-2xl border border-dashed border-white/10">
                     <p className="text-slate-400">Nenhum orçamento definido para este mês.</p>
-                    <p className="text-sm text-slate-400 mt-2">Defina limites de gastos por categoria nos Ajustes.</p>
+                    <p className="text-sm text-slate-500 mt-2">Defina limites de gastos por categoria nos Ajustes.</p>
                 </div>
             )}
 
             <div className="grid gap-4">
                 {budgetProgress.map(item => (
-                    <div key={item.id} className="p-4 bg-white rounded-2xl shadow-sm">
+                    <div key={item.id} className="p-5 bg-surface border border-white/5 rounded-2xl shadow-sm hover:bg-white/5 transition-colors">
                         <div className="flex justify-between items-center mb-2">
-                            <span className="font-semibold text-slate-900">{item.categoryName}</span>
-                            <span className="text-sm font-medium text-slate-500">
-                                {formatCurrency(item.spent)} <span className="text-xs font-normal opacity-70">de {formatCurrency(item.amount)}</span>
+                            <span className="font-semibold text-white">{item.categoryName}</span>
+                            <span className="text-sm font-medium text-slate-400">
+                                {formatCurrency(item.spent)} <span className="text-xs font-normal opacity-50">de {formatCurrency(item.amount)}</span>
                             </span>
                         </div>
 
-                        <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-3 bg-slate-800 rounded-full overflow-hidden border border-white/5">
                             <div
-                                className={`h-full transition-all duration-500 rounded-full ${item.percentage >= 100 ? 'bg-red-500' :
-                                        item.percentage >= 80 ? 'bg-orange-400' : 'bg-blue-500'
+                                className={`h-full transition-all duration-500 rounded-full shadow-[0_0_10px_rgba(0,0,0,0.3)] ${item.percentage >= 100 ? 'bg-gradient-to-r from-red-600 to-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]' :
+                                        item.percentage >= 80 ? 'bg-gradient-to-r from-orange-500 to-amber-500' :
+                                            'bg-gradient-to-r from-cyan-500 to-blue-500 shadow-[0_0_10px_rgba(6,182,212,0.4)]'
                                     }`}
                                 style={{ width: `${item.percentage}%` }}
                             />
                         </div>
 
-                        <div className="flex justify-between mt-2 text-xs text-slate-400">
-                            <span>{item.percentage.toFixed(0)}% utilizado</span>
+                        <div className="flex justify-between mt-2 text-xs text-slate-500">
+                            <span className={item.percentage >= 90 ? 'text-red-400' : ''}>{item.percentage.toFixed(0)}% utilizado</span>
                             <span>Restam {formatCurrency(Math.max(item.amount - item.spent, 0))}</span>
                         </div>
                     </div>

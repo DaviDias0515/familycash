@@ -16,12 +16,12 @@ export function SettingsAccounts() {
                 <div className="flex items-center">
                     <Link
                         to="/settings"
-                        className="p-1 -ml-1 mr-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors"
+                        className="p-1 -ml-1 mr-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
                     >
                         <ChevronLeft className="w-6 h-6" />
                     </Link>
-                    <h2 className="text-lg font-bold text-slate-900 flex items-center">
-                        <Wallet className="w-5 h-5 mr-2 text-slate-500" />
+                    <h2 className="text-lg font-bold text-white flex items-center">
+                        <Wallet className="w-5 h-5 mr-2 text-cyan-400" />
                         Minhas Contas
                     </h2>
                 </div>
@@ -37,27 +37,27 @@ export function SettingsAccounts() {
 
             <div className="grid gap-3">
                 {accounts.map(account => (
-                    <div key={account.id} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex justify-between items-center">
+                    <div key={account.id} className="bg-surface p-4 rounded-xl border border-white/5 shadow-sm hover:bg-white/5 transition-colors flex justify-between items-center group">
                         <div>
-                            <p className="font-medium text-slate-900">{account.name}</p>
-                            <p className="text-xs text-slate-500 capitalize">{account.type}</p>
+                            <p className="font-medium text-white">{account.name}</p>
+                            <p className="text-xs text-cyan-400 uppercase tracking-wider">{account.type}</p>
                         </div>
                         <div className="text-right">
-                            <p className="text-sm font-semibold text-slate-600">{formatCurrency(account.initial_balance)}</p>
-                            <p className="text-[10px] text-slate-400">Saldo Inicial</p>
+                            <p className="text-sm font-semibold text-slate-300 group-hover:text-white transition-colors">{formatCurrency(account.initial_balance)}</p>
+                            <p className="text-[10px] text-slate-500">Saldo Inicial</p>
                         </div>
                     </div>
                 ))}
 
                 {accounts.length === 0 && (
-                    <p className="text-center text-slate-400 text-sm py-4">Nenhuma conta cadastrada.</p>
+                    <p className="text-center text-slate-500 text-sm py-4">Nenhuma conta cadastrada.</p>
                 )}
             </div>
 
             {/* Mobile Floating Action Button (FAB) */}
             <button
                 onClick={() => navigate('/settings/accounts/new')}
-                className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg shadow-blue-600/30 flex items-center justify-center active:scale-95 transition-transform z-50"
+                className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-full shadow-[0_0_20px_rgba(6,182,212,0.4)] flex items-center justify-center active:scale-95 transition-transform z-50"
             >
                 <Plus size={32} strokeWidth={2.5} />
             </button>
