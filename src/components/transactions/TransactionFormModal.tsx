@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
-import { ArrowLeft, Check, Calendar, MessageSquare, Tag, CreditCard as CardIcon, Wallet, ArrowRightLeft } from 'lucide-react'
+import { ArrowLeft, Check, Calendar, MessageSquare, Tag, CreditCard as CardIcon, Wallet, ChevronDown } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../contexts/AuthContext'
 import { CalculatorModal } from '../ui/CalculatorModal'
+import { CategoryPickerDrawer } from './CategoryPickerDrawer'
+import { FixedTransactionToggle } from './FixedTransactionToggle'
 import type { Account, Category, CreditCard } from '../../types'
 
 type TransactionType = 'income' | 'expense' | 'transfer' | 'credit_card'
@@ -30,9 +32,11 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
     const [accountId, setAccountId] = useState('') // Source for Transfer/Expense, Dest for Income
     const [targetAccountId, setTargetAccountId] = useState('') // Dest for Transfer
     const [cardId, setCardId] = useState('') // For Credit Card
+    const [isFixed, setIsFixed] = useState(false)
 
     // UI State
     const [isCalculatorOpen, setIsCalculatorOpen] = useState(false)
+    const [isCategoryDrawerOpen, setIsCategoryDrawerOpen] = useState(false)
 
     // Fetch dependencies
     useEffect(() => {
@@ -43,7 +47,7 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
         }
     }, [isOpen, profile?.family_id])
 
-    // Reset form when type changes and auto-open calculator
+    // Reset form when type changes
     useEffect(() => {
         if (type) {
             setAmount(0)
@@ -53,11 +57,12 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
             setAccountId('')
             setTargetAccountId('')
             setCardId('')
+            setIsFixed(false)
 
-            // Auto-open calculator with specialized animation delay
+            // Auto-open calculator
             const timer = setTimeout(() => {
                 setIsCalculatorOpen(true);
-            }, 400); // 400ms delay for smooth entrance
+            }, 400);
 
             return () => clearTimeout(timer);
         }
@@ -72,9 +77,11 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
             if (amount <= 0) throw new Error("Valor inválido")
             if (!categoryId) throw new Error("Selecione uma categoria")
 
+            const recurrence = isFixed ? 'fixed' : 'none'
+
             if (type === 'transfer') {
                 if (!accountId || !targetAccountId) throw new Error("Selecione as contas")
-                // ... (Logic same as before, abbreviated here for brevity but fully implemented)
+
                 const { error: err1 } = await supabase.from('transactions').insert({
                     family_id: profile.family_id,
                     account_id: accountId,
@@ -82,7 +89,8 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
                     date,
                     description: `Transf. para: ${accounts.find(a => a.id === targetAccountId)?.name} - ${description}`,
                     category_id: categoryId,
-                    status: 'pago'
+                    status: 'pago',
+                    recurrence
                 })
                 if (err1) throw err1
                 const { error: err2 } = await supabase.from('transactions').insert({
@@ -92,7 +100,8 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
                     date,
                     description: `Transf. de: ${accounts.find(a => a.id === accountId)?.name} - ${description}`,
                     category_id: categoryId,
-                    status: 'pago'
+                    status: 'pago',
+                    recurrence: 'none' // Destination usually not fixed? Or should it mirror? Usually transfer is fixed on source.
                 })
                 if (err2) throw err2
 
@@ -105,7 +114,8 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
                     date,
                     description,
                     category_id: categoryId,
-                    status: 'pago'
+                    status: 'pago',
+                    recurrence
                 })
                 if (error) throw error
 
@@ -120,7 +130,8 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
                     date,
                     description,
                     category_id: categoryId,
-                    status: 'pago'
+                    status: 'pago',
+                    recurrence
                 })
                 if (error) throw error
             }
@@ -133,21 +144,14 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
         }
     }
 
-    // Filter categories
-    const filteredCategories = categories.filter(c => {
-        if (type === 'income') return c.kind === 'income'
-        if (type === 'expense') return c.kind === 'expense'
-        if (type === 'credit_card') return c.kind === 'credit_card' || c.kind === 'expense'
-        if (type === 'transfer') return c.kind === 'transfer'
-        return true
-    })
-
     const titleMap = {
         income: 'Nova Receita',
         expense: 'Nova Despesa',
         transfer: 'Nova Transferência',
         credit_card: 'Despesa no Cartão'
     }
+
+    const selectedCategory = categories.find(c => c.id === categoryId)
 
     return (
         <div className="fixed inset-0 z-[100] bg-background flex flex-col animate-in fade-in duration-200">
@@ -157,15 +161,15 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
                     <ArrowLeft size={24} />
                 </button>
                 <h1 className="text-lg font-medium text-white">{titleMap[type]}</h1>
-                <div className="w-10" /> {/* Spacer */}
+                <div className="w-10" />
             </div>
 
             {/* Main Content */}
             <div className="flex-1 overflow-y-auto">
 
-                {/* Value Display */}
-                <div className="py-10 flex flex-col items-center justify-center">
-                    <div className="text-sm text-slate-400 mb-2 uppercase tracking-wide font-medium">Valor da {type === 'income' ? 'receita' : 'transação'}</div>
+                {/* 1. Value Display */}
+                <div className="py-8 flex flex-col items-center justify-center">
+                    <div className="text-sm text-slate-400 mb-1 uppercase tracking-wide font-medium">Valor</div>
                     <button
                         onClick={() => setIsCalculatorOpen(true)}
                         className={`text-5xl font-bold ${amount === 0 ? 'text-slate-600' : 'text-white'} tracking-tight flex items-center gap-1 active:scale-95 transition-transform`}
@@ -176,9 +180,9 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
                 </div>
 
                 {/* Form Fields List */}
-                <div className="mt-4">
-                    {/* Date */}
-                    <div className="flex items-center p-4 border-y border-white/5">
+                <div className="space-y-1">
+                    {/* 2. Date */}
+                    <div className="flex items-center p-4 border-y border-white/5 bg-surface/30">
                         <Calendar className="text-slate-500 mr-4" size={20} />
                         <input
                             type="date"
@@ -188,8 +192,24 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
                         />
                     </div>
 
-                    {/* Description */}
-                    <div className="flex items-center p-4 border-b border-white/5">
+                    {/* 3. Category (Drawer Trigger) */}
+                    <div
+                        onClick={() => setIsCategoryDrawerOpen(true)}
+                        className="flex items-center p-4 border-b border-white/5 bg-surface/30 cursor-pointer active:bg-white/5 transition-colors"
+                    >
+                        <Tag className="text-slate-500 mr-4" size={20} />
+                        <div className="flex-1">
+                            {selectedCategory ? (
+                                <span className="text-white font-medium">{selectedCategory.name}</span>
+                            ) : (
+                                <span className="text-slate-500">Selecionar Categoria</span>
+                            )}
+                        </div>
+                        <ChevronDown className="text-slate-600" size={16} />
+                    </div>
+
+                    {/* 4. Description */}
+                    <div className="flex items-center p-4 border-b border-white/5 bg-surface/30">
                         <MessageSquare className="text-slate-500 mr-4" size={20} />
                         <input
                             type="text"
@@ -200,93 +220,96 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
                         />
                     </div>
 
-                    {/* Category Selection (Simple HTML Select for now, or Custom Modal later) */}
-                    <div className="relative flex items-center p-4 border-b border-white/5">
-                        <Tag className="text-slate-500 mr-4" size={20} />
-                        <select
-                            value={categoryId}
-                            onChange={e => setCategoryId(e.target.value)}
-                            className="w-full bg-transparent text-white appearance-none focus:outline-none"
-                            style={{ color: categoryId ? 'white' : '#52525b' }} // slate-600
-                        >
-                            <option value="" disabled>Categoria</option>
-                            {filteredCategories.map(c => (
-                                <option key={c.id} value={c.id} className="bg-surface text-white">{c.name}</option>
-                            ))}
-                        </select>
-                        <div className="absolute right-4 pointer-events-none text-slate-600">
-                            <ArrowRightLeft size={16} /> {/* Placeholder arrow */}
-                        </div>
-                    </div>
-
-                    {/* Account/Card Selection */}
-                    {type === 'credit_card' ? (
-                        <div className="relative flex items-center p-4 border-b border-white/5">
-                            <CardIcon className="text-slate-500 mr-4" size={20} />
-                            <select
-                                value={cardId}
-                                onChange={e => setCardId(e.target.value)}
-                                className="w-full bg-transparent text-white appearance-none focus:outline-none"
-                                style={{ color: cardId ? 'white' : '#52525b' }}
-                            >
-                                <option value="" disabled>Selecione o Cartão</option>
-                                {cards.map(c => (
-                                    <option key={c.id} value={c.id} className="bg-surface text-white">{c.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                    ) : type === 'transfer' ? (
-                        <>
-                            <div className="relative flex items-center p-4 border-b border-white/5">
+                    {/* 5. Account/Card Selection */}
+                    <div className="bg-surface/30 border-b border-white/5">
+                        {type === 'credit_card' ? (
+                            <div className="relative flex items-center p-4">
+                                <CardIcon className="text-slate-500 mr-4" size={20} />
+                                <select
+                                    value={cardId}
+                                    onChange={e => setCardId(e.target.value)}
+                                    className="w-full bg-transparent text-white appearance-none focus:outline-none"
+                                    style={{ color: cardId ? 'white' : '#64748b' }}
+                                >
+                                    <option value="" disabled>Selecione o Cartão</option>
+                                    {cards.map(c => (
+                                        <option key={c.id} value={c.id} className="bg-[#1e1e24] text-white">{c.name}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute right-4 pointer-events-none text-slate-600">
+                                    <ChevronDown size={16} />
+                                </div>
+                            </div>
+                        ) : type === 'transfer' ? (
+                            <div className="divide-y divide-white/5">
+                                <div className="relative flex items-center p-4">
+                                    <Wallet className="text-slate-500 mr-4" size={20} />
+                                    <select
+                                        value={accountId}
+                                        onChange={e => setAccountId(e.target.value)}
+                                        className="w-full bg-transparent text-white appearance-none focus:outline-none"
+                                        style={{ color: accountId ? 'white' : '#64748b' }}
+                                    >
+                                        <option value="" disabled>De: Conta Origem</option>
+                                        {accounts.map(a => (
+                                            <option key={a.id} value={a.id} className="bg-[#1e1e24] text-white">{a.name}</option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-4 pointer-events-none text-slate-600">
+                                        <ChevronDown size={16} />
+                                    </div>
+                                </div>
+                                <div className="relative flex items-center p-4">
+                                    <Wallet className="text-slate-500 mr-4" size={20} />
+                                    <select
+                                        value={targetAccountId}
+                                        onChange={e => setTargetAccountId(e.target.value)}
+                                        className="w-full bg-transparent text-white appearance-none focus:outline-none"
+                                        style={{ color: targetAccountId ? 'white' : '#64748b' }}
+                                    >
+                                        <option value="" disabled>Para: Conta Destino</option>
+                                        {accounts.map(a => (
+                                            <option key={a.id} value={a.id} className="bg-[#1e1e24] text-white">{a.name}</option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-4 pointer-events-none text-slate-600">
+                                        <ChevronDown size={16} />
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="relative flex items-center p-4">
                                 <Wallet className="text-slate-500 mr-4" size={20} />
                                 <select
                                     value={accountId}
                                     onChange={e => setAccountId(e.target.value)}
                                     className="w-full bg-transparent text-white appearance-none focus:outline-none"
-                                    style={{ color: accountId ? 'white' : '#52525b' }}
+                                    style={{ color: accountId ? 'white' : '#64748b' }}
                                 >
-                                    <option value="" disabled>De: Conta Origem</option>
+                                    <option value="" disabled>Conta</option>
                                     {accounts.map(a => (
-                                        <option key={a.id} value={a.id} className="bg-surface text-white">{a.name}</option>
+                                        <option key={a.id} value={a.id} className="bg-[#1e1e24] text-white">{a.name}</option>
                                     ))}
                                 </select>
+                                <div className="absolute right-4 pointer-events-none text-slate-600">
+                                    <ChevronDown size={16} />
+                                </div>
                             </div>
-                            <div className="relative flex items-center p-4 border-b border-white/5">
-                                <Wallet className="text-slate-500 mr-4" size={20} />
-                                <select
-                                    value={targetAccountId}
-                                    onChange={e => setTargetAccountId(e.target.value)}
-                                    className="w-full bg-transparent text-white appearance-none focus:outline-none"
-                                    style={{ color: targetAccountId ? 'white' : '#52525b' }}
-                                >
-                                    <option value="" disabled>Para: Conta Destino</option>
-                                    {accounts.map(a => (
-                                        <option key={a.id} value={a.id} className="bg-surface text-white">{a.name}</option>
-                                    ))}
-                                </select>
-                            </div>
-                        </>
-                    ) : (
-                        <div className="relative flex items-center p-4 border-b border-white/5">
-                            <Wallet className="text-slate-500 mr-4" size={20} />
-                            <select
-                                value={accountId}
-                                onChange={e => setAccountId(e.target.value)}
-                                className="w-full bg-transparent text-white appearance-none focus:outline-none"
-                                style={{ color: accountId ? 'white' : '#52525b' }}
-                            >
-                                <option value="" disabled>Conta</option>
-                                {accounts.map(a => (
-                                    <option key={a.id} value={a.id} className="bg-surface text-white">{a.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
+                    {/* 6. Fixed Transaction Toggle */}
+                    <div className="p-4">
+                        <FixedTransactionToggle
+                            isFixed={isFixed}
+                            onToggle={setIsFixed}
+                            color={type === 'expense' || type === 'credit_card' ? 'rose' : type === 'transfer' ? 'blue' : 'emerald'}
+                        />
+                    </div>
                 </div>
             </div>
 
-            {/* Footer FAB */}
+            {/* Footer FAB (Submit) */}
             <div className="p-6 flex justify-center pb-8 safe-area-bottom">
                 <button
                     onClick={handleSubmit}
@@ -301,13 +324,21 @@ export function TransactionFormModal({ isOpen, onClose, type }: TransactionFormM
                 </button>
             </div>
 
-            {/* Calculator Modal */}
+            {/* Modals/Drawers */}
             <CalculatorModal
                 isOpen={isCalculatorOpen}
                 onClose={() => setIsCalculatorOpen(false)}
                 onConfirm={(val) => setAmount(val)}
                 initialValue={amount}
             />
+
+            <CategoryPickerDrawer
+                isOpen={isCategoryDrawerOpen}
+                onClose={() => setIsCategoryDrawerOpen(false)}
+                onSelect={(cat) => setCategoryId(cat.id)}
+                selectedCategoryId={categoryId}
+            />
         </div>
     )
 }
+

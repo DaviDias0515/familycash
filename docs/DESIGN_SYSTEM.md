@@ -68,5 +68,9 @@ A criação de transações deve ser imersiva e focada na entrada de dados rápi
     *   Teclado numérico grande e fácil de tocar.
     *   Botões de ação ("Concluído", "Cancelar") na parte inferior.
     *   **Auto-Open:** Ao abrir o form, a calculadora deve surgir automaticamente após um breve delay (ex: 300ms) com animação suave.
-*   **Campos Secundários:** Descrição, Categoria, Conta devem vir abaixo do valor, em uma lista vertical limpa.
+*   **Campos Secundários:**
+    *   **Categoria:** Deve vir logo abaixo do valor. Ao clicar, abre um **Drawer de Seleção** (similar à calculadora) com barra de busca e lista de categorias.
+    *   **Descrição:** Campo de texto simples abaixo da categoria.
+    *   **Conta/Cartão:** Último campo de seleção.
+    *   **Transação Fixa:** Toggle switch para marcar se é recorrente (ex: "Despesa Fixa").
 *   **Background:** Sólido (`bg-background` ou `bg-surface`) para evitar distrações.

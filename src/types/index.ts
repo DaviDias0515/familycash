@@ -34,6 +34,8 @@ export interface Transaction {
     date: string
     description: string
     status: TransactionStatus
+    recurrence?: 'none' | 'fixed' | 'installment'
+    parent_id?: string | null
 }
 
 export interface CreditCard {
