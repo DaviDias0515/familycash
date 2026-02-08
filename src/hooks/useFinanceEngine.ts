@@ -6,9 +6,10 @@ interface FinanceEngineProps {
     transactions: Transaction[]
     cards: CreditCard[]
     statements: CardStatement[]
+    targetDate?: Date // New optional prop, defaults to now
 }
 
-export function useFinanceEngine({ accounts, transactions, cards, statements }: FinanceEngineProps) {
+export function useFinanceEngine({ accounts, transactions, cards, statements, targetDate = new Date() }: FinanceEngineProps) {
 
     // 2.1 Saldo de Conta (dinheiro real)
     const accountBalances = useMemo(() => {
@@ -53,19 +54,21 @@ export function useFinanceEngine({ accounts, transactions, cards, statements }: 
 
     // 2.3 Saldo Projetado Família
     const projectedBalance = useMemo(() => {
-        const today = new Date()
-        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+        // Defines the horizon: End of the Target Month
+        const endOfTargetMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
+        endOfTargetMonth.setHours(23, 59, 59, 999)
 
         const pendingSum = transactions
             .filter(t => {
                 if (t.status !== 'pendente') return false
-                const txDate = new Date(t.date)
-                return txDate <= endOfMonth
+                const txDate = new Date(t.date + 'T12:00:00') // Force noon to avoid timezone shift dropping day
+                return txDate <= endOfTargetMonth
             })
             .reduce((sum, t) => sum + Number(t.amount), 0)
 
+        // Real Balance available now + All pending transactions up to the target date
         return availableNow + pendingSum
-    }, [availableNow, transactions])
+    }, [availableNow, transactions, targetDate])
 
     // 2.4 Lógica de Fatura (Helper)
     const getStatementDateForTransaction = (dateStr: string, closingDay: number) => {

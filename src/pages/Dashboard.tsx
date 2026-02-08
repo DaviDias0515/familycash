@@ -1,14 +1,19 @@
+import { useState } from 'react'
 import { useFinanceEngine } from '../hooks/useFinanceEngine'
 import { useFamilyData } from '../hooks/useFamilyData'
+import { HomeHeader } from '../components/layout/HomeHeader'
+import { MonthSelector } from '../components/ui/MonthSelector'
 
 export function Dashboard() {
     const { accounts, transactions, cards, statements, loading } = useFamilyData()
+    const [selectedDate, setSelectedDate] = useState(new Date())
 
     const { availableNow, projectedBalance, cardUtilizations } = useFinanceEngine({
         accounts,
         transactions,
         cards,
-        statements
+        statements,
+        targetDate: selectedDate
     })
 
     // Format currency
@@ -19,48 +24,60 @@ export function Dashboard() {
     }
 
     return (
-        <div className="space-y-6">
-            <header className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-white text-glow">Visão Geral</h1>
-                    <p className="text-slate-400">Bem-vindo ao FamilyCash</p>
-                </div>
-            </header>
+        <div className="space-y-6 pb-20">
+            {/* 1. Header & Month Selector */}
+            <div className="space-y-4">
+                <HomeHeader />
+                <MonthSelector
+                    selectedDate={selectedDate}
+                    onChange={setSelectedDate}
+                />
+            </div>
 
             <div className="grid gap-4">
-                {/* Disponível Agora - Cyber Card */}
-                <div className="relative p-6 rounded-2xl overflow-hidden group">
-                    <div className="absolute inset-0 bg-surface border border-cyan-500/30 shadow-[0_0_20px_rgba(34,211,238,0.15)] transition-all group-hover:shadow-[0_0_30px_rgba(34,211,238,0.25)]"></div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-transparent"></div>
-
-                    <div className="relative z-10">
-                        <p className="text-sm text-cyan-200/80 font-medium uppercase tracking-wider">Disponível Agora</p>
-                        <p className="text-4xl font-bold mt-2 text-white drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">
-                            {formatBRL(availableNow)}
-                        </p>
-                        <p className="text-xs text-slate-400 mt-2">Saldo real em contas</p>
+                {/* 2. Balance Cards Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Saldo Atual (Real) */}
+                    <div className="relative p-6 rounded-2xl overflow-hidden group bg-surface border border-white/5">
+                        <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 to-transparent"></div>
+                        <div className="relative z-10">
+                            <p className="text-sm text-cyan-200/80 font-medium uppercase tracking-wider">Saldo Atual</p>
+                            <p className="text-3xl font-bold mt-1 text-white">
+                                {formatBRL(availableNow)}
+                            </p>
+                            <p className="text-xs text-slate-500 mt-1">Disponível em conta hoje</p>
+                        </div>
                     </div>
-                    {/* Decorative Elements */}
-                    <div className="absolute -right-10 -top-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl"></div>
-                    <div className="absolute right-4 bottom-4 w-2 h-2 bg-cyan-400 rounded-full shadow-[0_0_10px_rgba(34,211,238,1)] animate-pulse"></div>
+
+                    {/* Saldo Previsto (Projeção) */}
+                    <div className="p-6 rounded-2xl overflow-hidden bg-surface/50 border border-white/5 border-dashed">
+                        <div className="relative z-10">
+                            <p className="text-sm text-purple-200/80 font-medium uppercase tracking-wider">
+                                Previsão {selectedDate.toLocaleString('pt-BR', { month: 'long' })}
+                            </p>
+                            <div className="flex items-end space-x-2 mt-1">
+                                <p className="text-3xl font-bold text-white/90">
+                                    {formatBRL(projectedBalance)}
+                                </p>
+                            </div>
+
+                            <div className="flex items-center space-x-2 mt-2">
+                                {projectedBalance < availableNow ? (
+                                    <span className="text-xs text-red-400 font-medium bg-red-500/10 px-2 py-0.5 rounded">
+                                        ↓ Caindo
+                                    </span>
+                                ) : (
+                                    <span className="text-xs text-emerald-400 font-medium bg-emerald-500/10 px-2 py-0.5 rounded">
+                                        ↑ Subindo
+                                    </span>
+                                )}
+                                <p className="text-xs text-slate-500">após pendências do mês</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Projeção */}
-                <div className="p-5 glass-panel rounded-2xl">
-                    <p className="text-sm text-slate-400 font-medium uppercase tracking-wider">Projeção Fim do Mês</p>
-                    <div className="flex items-end space-x-3 mt-2">
-                        <p className="text-2xl font-semibold text-white">{formatBRL(projectedBalance)}</p>
-                        {projectedBalance < availableNow && (
-                            <span className="text-xs text-red-400 mb-1 font-medium bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">↓ Caindo</span>
-                        )}
-                        {projectedBalance > availableNow && (
-                            <span className="text-xs text-emerald-400 mb-1 font-medium bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">↑ Subindo</span>
-                        )}
-                    </div>
-                    <p className="text-xs text-slate-500 mt-2">Considerando pendentes do mês</p>
-                </div>
-
-                {/* Cartões */}
+                {/* 3. Cartões (Keep existing logic for now) */}
                 {cardUtilizations.length > 0 && (
                     <h2 className="text-lg font-semibold text-white mt-4 border-l-2 border-purple-500 pl-3">Cartões de Crédito</h2>
                 )}
