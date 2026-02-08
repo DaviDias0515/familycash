@@ -1,100 +1,60 @@
-# Design System: Family Cash - Future Minimal
+# Design System: Family Cash - Cyber Neon
 
-Este documento define a identidade visual do projeto **Family Cash**, focando em uma estética moderna, elegante, minimalista e levemente futurista.
+Este sistema visual foca em uma estética **High-Tech, Cyberpunk e Neon**. O objetivo é brilhar, destacar e trazer uma sensação de tecnologia avançada.
 
-## 1. Princípios de Design
+## 1. Princípios de Visual (Neon Tech)
 
-*   **Minimalismo Sofisticado:** Menos é mais. O espaço em branco (ou "espaço escuro") é um elemento ativo de design.
-*   **Futurismo Sutil:** Uso de *Glassmorphism* (efeito de vidro fosco), gradientes suaves e brilhos discretos para evocar tecnologia sem ser exagerado.
-*   **Elegância:** Tipografia limpa, contrastes refinados e animações fluídas.
+*   **Darkness First:** Fundos profundos e escuros para fazer as luzes brilharem.
+*   **Neon Glow:** Elementos ativos emitem luz (Glow/Sombra colorida).
+*   **High Contrast:** Texto branco puro ou cores neon sobre fundo preto.
+*   **Grid & Lines:** Uso de bordas finas e linhas para separar conteúdo, lembrando interfaces HUD (Heads-Up Display).
 
-## 2. Paleta de Cores
+## 2. Paleta de Cores (Cyber)
 
-O sistema será híbrido, suportando **Modo Claro** (Clean Minimalist) e **Modo Escuro** (Future Dark).
+O foco é no **Modo Escuro** (Padrão). O Modo Claro será secundário ou "High brightness".
 
-### Estrutura Semântica
-As cores serão definidas semanticamente para adaptar-se automaticamente ao tema.
+### Cores Base
+*   `bg-background`: `#09090b` (Rich Black - Quase preto puro)
+*   `bg-surface`: `#18181b` (Zinc 950 - Metal escuro)
+*   `bg-surface-glass`: `rgba(24, 24, 27, 0.6)` (Dark Glass)
+*   `text-primary`: `#FFFFFF` (White Pure)
+*   `text-secondary`: `#A1A1AA` (Zinc 400 - Metal polido)
+*   `border-color`: `#27272a` (Zinc 800)
 
-| Variável | Função | Modo Claro (Hex) | Modo Escuro (Hex) |
-| :--- | :--- | :--- | :--- |
-| `bg-background` | Fundo da página | `#FFFFFF` (White) | `#030712` (Gray 950) |
-| `bg-surface` | Cards e Painéis | `#F5F5F5` (Gray 100) | `#111827` (Gray 900) |
-| `bg-surface-glass`| Superfícies de Vidro | `rgba(255,255,255,0.7)` | `rgba(17,24,39,0.7)` |
-| `text-primary` | Texto Principal | `#1F2937` (Gray 800) | `#F9FAFB` (Gray 50) |
-| `text-secondary` | Texto Secundário | `#6B7280` (Gray 500) | `#9CA3AF` (Gray 400) |
-| `border-color` | Bordas | `#E5E7EB` (Gray 200) | `#1F2937` (Gray 800) |
+### Cores Neon (Accents)
 
-### Cores de Destaque (Accents) - Comuns aos dois modos
+Cores saturadas para gerar o efeito de luz.
 
-*   **Primary (Brand):** `Violet` a `Fuchsia`
-    *   Gradiente: `bg-gradient-to-r from-violet-600 to-fuchsia-600` (Pode ser ajustado vibrância no Dark)
-*   **Secondary (Action):** `Cyber Cyan` (`cyan-500`)
-*   **Status:**
-    *   Success: `emerald-500`
-    *   Warning: `amber-500`
-    *   Danger: `rose-500`
+*   **Primary (Cyber Blue):** `#06b6d4` a `#22d3ee` (Cyan)
+    *   *Glow:* `shadow-[0_0_20px_rgba(34,211,238,0.6)]`
+*   **Secondary (Electric Purple):** `#a855f7` a `#d946ef` (Fuchsia)
+*   **Accent (Laser Green):** `#10b981` (Emerald Neon)
 
-## 3. Diretrizes de Modo (Theming)
+## 3. Efeitos Especiais (Utilities)
 
-### Modo Claro (Minimalist Clean)
-*   **Foco:** Legibilidade, luz, "respiro".
-*   **Sombras:** Suaves e difusas (`shadow-sm`, `shadow-md`).
-*   **Contraste:** Preto sobre branco (alto contraste textual).
-*   **Estilo:** Papel digital, clean tech.
+### Neon Text
+Texto que parece brilhar.
+`.text-neon-blue` -> `text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]`
 
-### Modo Escuro (Future Dark)
-*   **Foco:** Imersão, conforto visual, "brilho".
-*   **Sombras:** Sombras coloridas (Glow) e bordas luminosas.
-*   **Contraste:** Branco suavizado sobre fundo profundo.
-*   **Estilo:** Glassmorphism, Neon sutil.
+### Glass HUD
+Painéis com borda brilhante e fundo semi-transparente.
+`border border-white/10 bg-zinc-950/80 backdrop-blur-xl`
 
 ## 4. Tipografia
+*   **Fonte:** `Inter` (Manter pela legibilidade), mas usar `uppercase tracking-widest` em legendas e pequenos títulos para o "Tech Feel".
+*   **Números:** Se possível, usar fontes monospaced para dados financeiros (`font-mono`).
 
-*   **Fonte Principal:** `Inter` (Sans-serif).
-*   **Títulos:** `Tracking-tight` para um visual mais compacto e moderno.
-
-## 5. Componentes de Interface & UX
-
-### Glass HUD (Interface Flutuante Tecnológica)
-*   **Conceito:** Inspirado em *iOS AssistiveTouch* e *Control Center*.
-*   **Aplicação:** Menus de ação rápida e atalhos globais.
-*   **Estilo Visual:**
-    *   **Fundo:** Vidro Escuro Profundo (`bg-slate-900/90` ou `bg-black/80`).
-    *   **Blur:** Intenso (`backdrop-blur-xl`).
-    *   **Borda:** Sutil e luminosa (`border border-white/10`).
-    *   **Forma:** Arredondada (`rounded-3xl`), flutuando sobre a interface, desconectada das bordas.
-*   **Comportamento:**
-    *   Animação de "Spring" (escala elástica) ao abrir.
-    *   Ícones com alto contraste (Geralmente branco sobre vidro escuro).
-
-### Modais Clássicos
-*   Reservados para formulários complexos ou confirmações de sistema.
-
-## 6. Exemplo de Configuração (Tailwind)
-
-Configuração via variáveis CSS para troca instantânea de tema.
+## 5. Configuração CSS
 
 ```css
-/* index.css */
 @layer base {
   :root {
-    /* Light Mode Default */
-    --background: 255 255 255;
-    --foreground: 31 41 55;
-    --surface: 245 245 245;
-  }
-
-  .dark {
-    /* Dark Mode Overrides */
-    --background: 3 7 18;
-    --foreground: 249 250 251;
-    --surface: 17 24 39;
-  }
-
-  body {
-    @apply bg-[rgb(var(--background))] text-[rgb(var(--foreground))] transition-colors duration-300;
+    /* Cyber Dark Theme (Default) */
+    --background: 9 9 11;       /* #09090b */
+    --foreground: 250 250 250;  /* #fafafa */
+    --surface: 24 24 27;        /* #18181b */
+    --primary: 34 211 238;      /* #22d3ee (Cyan 400) */
+    --secondary: 217 70 239;    /* #d946ef (Fuchsia 500) */
   }
 }
 ```
-
-Esta identidade visual garantirá que o **Family Cash** tenha uma aparência coesa, moderna e distinta.

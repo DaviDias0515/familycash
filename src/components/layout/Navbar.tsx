@@ -3,11 +3,16 @@ import { LayoutDashboard, History, PieChart, Settings, LogOut, Plus } from 'luci
 import { useAuth } from '../../contexts/AuthContext'
 import { useState } from 'react'
 import { TransactionGlassMenu } from '../transactions/TransactionGlassMenu'
+import { TransactionFormModal } from '../transactions/TransactionFormModal'
+
+type TransactionType = 'income' | 'expense' | 'transfer' | 'credit_card'
+
 
 export function Navbar() {
     const { signOut } = useAuth()
     const location = useLocation()
-    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false)
+    const [isGlassMenuOpen, setIsGlassMenuOpen] = useState(false)
+    const [formType, setFormType] = useState<TransactionType | null>(null)
 
     // Hide mobile nav on settings sub-pages (e.g. /settings/accounts)
     // But show on /settings (the menu hub)
@@ -21,16 +26,22 @@ export function Navbar() {
     ]
 
     const handleCreateTransaction = (type: string) => {
-        console.log('Create transaction:', type)
-        // Navigate or open form modal
+        setFormType(type as TransactionType)
+        setIsGlassMenuOpen(false)
     }
 
     return (
         <>
             <TransactionGlassMenu
-                isOpen={isTransactionModalOpen}
-                onClose={() => setIsTransactionModalOpen(false)}
-                onSelectType={handleCreateTransaction}
+                isOpen={isGlassMenuOpen}
+                onClose={() => setIsGlassMenuOpen(false)}
+                onSelectType={(type) => handleCreateTransaction(type)}
+            />
+
+            <TransactionFormModal
+                isOpen={!!formType}
+                type={formType}
+                onClose={() => setFormType(null)}
             />
 
             {/* Mobile Bottom Nav - Hidden on Settings Sub-pages */}
@@ -57,7 +68,7 @@ export function Navbar() {
                         {/* Middle Plus Button */}
                         <div className="relative -top-5">
                             <button
-                                onClick={() => setIsTransactionModalOpen(true)}
+                                onClick={() => setIsGlassMenuOpen(true)}
                                 className="flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700 transition-transform active:scale-95"
                             >
                                 <Plus size={32} strokeWidth={2.5} />
@@ -94,7 +105,7 @@ export function Navbar() {
                 {/* New Transaction Button */}
                 <div className="px-2 mb-6">
                     <button
-                        onClick={() => setIsTransactionModalOpen(true)}
+                        onClick={() => setIsGlassMenuOpen(true)}
                         className="flex items-center justify-center space-x-2 w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 active:scale-95"
                     >
                         <Plus size={20} strokeWidth={2.5} />

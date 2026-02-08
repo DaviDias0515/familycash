@@ -3,27 +3,50 @@
 @theme {
   --font-sans: 'Inter', sans-serif;
 
+  /* Mapping CSS variables to Tailwind colors */
   --color-background: rgb(var(--background));
   --color-foreground: rgb(var(--foreground));
   --color-surface: rgb(var(--surface));
+  --color-surface-glass: rgb(var(--surface-glass));
   --color-primary: rgb(var(--primary));
   --color-secondary: rgb(var(--secondary));
 }
 
 :root {
-  --background: 255 255 255;
-  --foreground: 31 41 55;
-  --surface: 245 245 245;
-  --primary: 124 58 237;
-  --secondary: 6 182 212;
+  /* Cyber Dark Configuration (Default) */
+  --background: 9 9 11;
+  /* Gray 950 (Rich Black) */
+  --foreground: 250 250 250;
+  /* Zinc 50 */
+  --surface: 24 24 27;
+  /* Zinc 950 (Dark Metal) */
+  --surface-glass: 24 24 27 / 0.6;
+  /* Zinc 950 with alpha */
+  --primary: 34 211 238;
+  /* Cyan 400 (Neon Blue) */
+  --secondary: 217 70 239;
+  /* Fuchsia 500 (Neon Purple) */
 }
 
-.dark {
-  --background: 3 7 18;
-  --foreground: 249 250 251;
-  --surface: 17 24 39;
-  --primary: 139 92 246;
-  --secondary: 34 211 238;
+/* Light Mode Overrides (if needed) */
+.light {
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --surface: 255 255 255;
+  --surface-glass: 255 255 255 / 0.8;
+  --primary: 8 145 178;
+  --secondary: 192 38 211;
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 10px rgb(var(--primary));
+  }
+
+  .box-glow {
+    box-shadow: 0 0 20px -5px rgb(var(--primary) / 0.5);
+  }
 }
 
 @layer base {
@@ -33,5 +56,6 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
