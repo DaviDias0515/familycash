@@ -16,7 +16,10 @@ export function useFamilyData() {
     })
 
     useEffect(() => {
-        if (!profile?.family_id) return
+        if (!profile?.family_id) {
+            setLoading(false)
+            return
+        }
 
         const fetchData = async () => {
             try {

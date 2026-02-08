@@ -58,7 +58,23 @@ Painéis com borda brilhante e fundo semi-transparente.
   }
 }
 ```
-## 6. Entrada de Transações (Mobile-First)
+
+## 6. Padrões de Layout
+
+### Floating Header Card (Painel Flutuante)
+Container de destaque que "flutua" sobre o fundo principal, criando profundidade.
+
+*   **Estrutura:**
+    1.  **Top Bar (Cor 1):** Fundo da página (`bg-background`). Contém Avatar e Notificações.
+    2.  **Floating Card (Cor 2):** Cartão com bordas arredondadas e sombra (`bg-surface` ou gradiente suave). Contém o Core Financeiro (Mês, Saldos).
+    3.  **Chart Area (Cor 3):** Área interna do cartão com contraste sutil (ex: `bg-black/20`) para o gráfico.
+
+### Month Navigation
+*   **Inline:** Setas laterais para troca rápida.
+*   **Modal:** Ao clicar no mês, abre grid de seleção de Mês/Ano (Navegação macro).
+
+## 7. Entrada de Transações (Mobile-First)
+
 
 A criação de transações deve ser imersiva e focada na entrada de dados rápida.
 

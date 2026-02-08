@@ -2,13 +2,17 @@ import { useState } from 'react'
 import { useFinanceEngine } from '../hooks/useFinanceEngine'
 import { useFamilyData } from '../hooks/useFamilyData'
 import { HomeHeader } from '../components/layout/HomeHeader'
-import { MonthSelector } from '../components/ui/MonthSelector'
 
 export function Dashboard() {
     const { accounts, transactions, cards, statements, loading } = useFamilyData()
     const [selectedDate, setSelectedDate] = useState(new Date())
 
-    const { availableNow, projectedBalance, cardUtilizations } = useFinanceEngine({
+    const {
+        availableNow,
+        projectedBalance,
+        cardUtilizations,
+        monthlyCumulativeBalance
+    } = useFinanceEngine({
         accounts,
         transactions,
         cards,
@@ -25,59 +29,17 @@ export function Dashboard() {
 
     return (
         <div className="space-y-6 pb-20">
-            {/* 1. Header & Month Selector */}
-            <div className="space-y-4">
-                <HomeHeader />
-                <MonthSelector
-                    selectedDate={selectedDate}
-                    onChange={setSelectedDate}
-                />
-            </div>
+            {/* New Floating Header with everything included */}
+            <HomeHeader
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
+                availableNow={availableNow}
+                projectedBalance={projectedBalance}
+                monthlyData={monthlyCumulativeBalance}
+            />
 
             <div className="grid gap-4">
-                {/* 2. Balance Cards Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Saldo Atual (Real) */}
-                    <div className="relative p-6 rounded-2xl overflow-hidden group bg-surface border border-white/5">
-                        <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 to-transparent"></div>
-                        <div className="relative z-10">
-                            <p className="text-sm text-cyan-200/80 font-medium uppercase tracking-wider">Saldo Atual</p>
-                            <p className="text-3xl font-bold mt-1 text-white">
-                                {formatBRL(availableNow)}
-                            </p>
-                            <p className="text-xs text-slate-500 mt-1">Disponível em conta hoje</p>
-                        </div>
-                    </div>
-
-                    {/* Saldo Previsto (Projeção) */}
-                    <div className="p-6 rounded-2xl overflow-hidden bg-surface/50 border border-white/5 border-dashed">
-                        <div className="relative z-10">
-                            <p className="text-sm text-purple-200/80 font-medium uppercase tracking-wider">
-                                Previsão {selectedDate.toLocaleString('pt-BR', { month: 'long' })}
-                            </p>
-                            <div className="flex items-end space-x-2 mt-1">
-                                <p className="text-3xl font-bold text-white/90">
-                                    {formatBRL(projectedBalance)}
-                                </p>
-                            </div>
-
-                            <div className="flex items-center space-x-2 mt-2">
-                                {projectedBalance < availableNow ? (
-                                    <span className="text-xs text-red-400 font-medium bg-red-500/10 px-2 py-0.5 rounded">
-                                        ↓ Caindo
-                                    </span>
-                                ) : (
-                                    <span className="text-xs text-emerald-400 font-medium bg-emerald-500/10 px-2 py-0.5 rounded">
-                                        ↑ Subindo
-                                    </span>
-                                )}
-                                <p className="text-xs text-slate-500">após pendências do mês</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* 3. Cartões (Keep existing logic for now) */}
+                {/* Cartões (Keep existing logic) */}
                 {cardUtilizations.length > 0 && (
                     <h2 className="text-lg font-semibold text-white mt-4 border-l-2 border-purple-500 pl-3">Cartões de Crédito</h2>
                 )}
