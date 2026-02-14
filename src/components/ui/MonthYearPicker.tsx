@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 
 interface MonthYearPickerProps {
@@ -63,9 +64,9 @@ export function MonthYearPicker({ selectedDate, onChange }: MonthYearPickerProps
                 </button>
             </div>
 
-            {/* Modal Overlay */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+            {/* Modal Overlay - Portalled to body to avoid z-index/transform issues */}
+            {isModalOpen && createPortal(
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
                     <div className="bg-[#18181b] border border-white/10 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
                         {/* Modal Header */}
                         <div className="flex justify-between items-center p-4 border-b border-white/5 bg-white/5">
@@ -107,8 +108,23 @@ export function MonthYearPicker({ selectedDate, onChange }: MonthYearPickerProps
                                 )
                             })}
                         </div>
+
+                        {/* Footer - Current Month Action */}
+                        <div className="p-4 border-t border-white/5 bg-white/5 flex justify-center">
+                            <button
+                                onClick={() => {
+                                    const now = new Date()
+                                    onChange(now)
+                                    setIsModalOpen(false)
+                                }}
+                                className="text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors"
+                            >
+                                Voltar para o Mês Atual
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </>
     )
