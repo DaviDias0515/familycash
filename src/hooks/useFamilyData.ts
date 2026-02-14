@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
-import type { Account, Transaction, CreditCard, CardStatement, Category, Budget } from '../types'
+import type { Account, Transaction, CreditCard, CardStatement, Category, Budget, Profile } from '../types'
 
 export function useFamilyData() {
     const { profile } = useAuth()
@@ -12,7 +12,8 @@ export function useFamilyData() {
         cards: [] as CreditCard[],
         statements: [] as CardStatement[],
         categories: [] as Category[],
-        budgets: [] as Budget[]
+        budgets: [] as Budget[],
+        profiles: [] as Profile[]
     })
 
     useEffect(() => {
@@ -26,13 +27,14 @@ export function useFamilyData() {
                 setLoading(true)
                 const familyId = profile.family_id
 
-                const [accounts, transactions, cards, statements, categories, budgets] = await Promise.all([
+                const [accounts, transactions, cards, statements, categories, budgets, profiles] = await Promise.all([
                     supabase.from('accounts').select('*').eq('family_id', familyId),
                     supabase.from('transactions').select('*').eq('family_id', familyId),
                     supabase.from('credit_cards').select('*').eq('family_id', familyId),
                     supabase.from('card_statements').select('*').eq('family_id', familyId),
                     supabase.from('categories').select('*').or(`family_id.eq.${familyId},family_id.is.null`), // Categories can be global (null) or family specific
-                    supabase.from('budgets').select('*').eq('family_id', familyId)
+                    supabase.from('budgets').select('*').eq('family_id', familyId),
+                    supabase.from('profiles').select('*').eq('family_id', familyId)
                 ])
 
                 setData({
@@ -41,7 +43,8 @@ export function useFamilyData() {
                     cards: (cards.data as CreditCard[]) || [],
                     statements: (statements.data as CardStatement[]) || [],
                     categories: (categories.data as Category[]) || [],
-                    budgets: (budgets.data as Budget[]) || []
+                    budgets: (budgets.data as Budget[]) || [],
+                    profiles: (profiles.data as Profile[]) || []
                 })
 
             } catch (error) {

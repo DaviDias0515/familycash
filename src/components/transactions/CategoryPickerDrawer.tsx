@@ -57,7 +57,7 @@ export function CategoryPickerDrawer({ isOpen, onClose, onSelect, selectedCatego
         income: 'text-emerald-400 bg-emerald-500/10 shadow-[0_0_10px_rgba(52,211,153,0.2)]',
         expense: 'text-rose-400 bg-rose-500/10 shadow-[0_0_10px_rgba(251,113,133,0.2)]',
         credit_card: 'text-amber-400 bg-amber-500/10 shadow-[0_0_10px_rgba(251,191,36,0.2)]',
-        transfer: 'text-blue-400 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.2)]'
+        transfer: 'text-cyan-400 bg-cyan-500/10 shadow-[0_0_10px_rgba(34,211,238,0.2)]'
     }
 
     return (
