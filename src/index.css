@@ -3,56 +3,64 @@
 @theme {
   --font-sans: 'Inter', sans-serif;
 
-  /* Color Palette - derived from Design System variables */
-  --color-background: rgb(9 9 11);
-  --color-foreground: rgb(250 250 250);
-  --color-surface: rgb(24 24 27);
-  --color-surface-glass: rgb(24 24 27 / 0.6);
-  --color-primary: rgb(34 211 238);
-  /* Cyan 400 */
-  --color-secondary: rgb(217 70 239);
-  /* Fuchsia 500 */
+  /* Aura Palette */
+  --color-slate-50: #F8FAFC;
+  --color-slate-100: #F1F5F9;
+  --color-slate-200: #E2E8F0;
+  --color-slate-300: #CBD5E1;
+  --color-slate-400: #94A3B8;
+  --color-slate-500: #64748B;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1E293B;
+  --color-slate-900: #0F172A;
+  --color-slate-950: #020617;
 
-  --color-neon-blue: rgb(6 182 212);
-  /* Cyan 500 equivalent for variety if needed, or match primary */
-  --color-neon-purple: rgb(168 85 247);
-  /* Purple 500 */
-  --color-neon-green: rgb(16 185 129);
-  /* Emerald 500 */
+  --color-indigo-500: #6366F1;
+  --color-indigo-600: #4F46E5;
+
+  /* Semantic Tokens */
+  --color-background: var(--color-slate-50);
+  --color-foreground: var(--color-slate-900);
+
+  --color-surface: #FFFFFF;
+  --color-surface-subtle: var(--color-slate-50);
+
+  --color-primary: var(--color-indigo-500);
+  --color-primary-foreground: #FFFFFF;
+
+  --color-border: rgba(15, 23, 42, 0.08);
+  --color-border-subtle: rgba(15, 23, 42, 0.04);
 }
 
 :root {
-  /* CSS Variables for usage outside @theme if necessary, but @theme handles the mapping in TW4 */
-  --background: 9 9 11;
-  --foreground: 250 250 250;
-  --surface: 24 24 27;
-  --primary: 34 211 238;
-  --secondary: 217 70 239;
+  /* Aura Shadows */
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.04);
+  --shadow-button: 0 4px 12px rgba(99, 102, 241, 0.3);
+  --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
 }
 
 @layer utilities {
-  .text-glow {
-    text-shadow: 0 0 10px var(--color-primary);
+  .glass-aura {
+    @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-sm;
   }
 
-  .text-neon-blue {
-    color: var(--color-primary);
-    filter: drop-shadow(0 0 5px rgba(34, 211, 238, 0.8));
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
   }
 
-  .box-glow {
-    box-shadow: 0 0 20px -5px rgb(34 211 238 / 0.5);
-  }
-
-  .glass-panel {
-    @apply border border-white/10 bg-surface/80 backdrop-blur-xl;
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600;
   }
 }
 
 @layer base {
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    /* Basic reset/smoothness */
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-900;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

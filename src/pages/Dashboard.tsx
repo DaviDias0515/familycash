@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useFinanceEngine } from '../hooks/useFinanceEngine'
 import { useFamilyData } from '../hooks/useFamilyData'
 import { HomeHeader } from '../components/layout/HomeHeader'
+import { CreditCard, Wallet, Plus } from 'lucide-react'
 
 export function Dashboard() {
     const { accounts, transactions, cards, statements, loading } = useFamilyData()
@@ -20,16 +21,19 @@ export function Dashboard() {
         targetDate: selectedDate
     })
 
-    // Format currency
     const formatBRL = (val: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val)
 
     if (loading) {
-        return <div className="p-4 text-center text-slate-400 animate-pulse">Carregando finanças...</div>
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center p-4">
+                <div className="w-8 h-8 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mb-4"></div>
+                <p className="text-slate-400 text-sm font-medium animate-pulse">Sincronizando Aura...</p>
+            </div>
+        )
     }
 
     return (
-        <div className="space-y-6 pb-20">
-            {/* New Floating Header with everything included */}
+        <div className="pb-32 bg-slate-50 min-h-screen">
             <HomeHeader
                 selectedDate={selectedDate}
                 onDateChange={setSelectedDate}
@@ -38,49 +42,72 @@ export function Dashboard() {
                 monthlyData={monthlyCumulativeBalance}
             />
 
-            <div className="grid gap-4">
-                {/* Cartões (Keep existing logic) */}
+            <div className="px-4 space-y-6">
+                {/* Credit Cards Section - Bento Style */}
                 {cardUtilizations.length > 0 && (
-                    <h2 className="text-lg font-semibold text-white mt-4 border-l-2 border-purple-500 pl-3">Cartões de Crédito</h2>
-                )}
-                {cardUtilizations.map(card => (
-                    <div key={card.id} className="p-5 bg-surface border border-white/5 rounded-2xl relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-4 opacity-5">
-                            {/* Abstract card bg decoration */}
-                            <div className="w-32 h-32 bg-purple-500 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between px-1">
+                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                                <CreditCard size={16} className="text-indigo-500" />
+                                Cartões
+                            </h3>
                         </div>
 
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-center mb-4">
-                                <p className="font-medium text-white">{card.name}</p>
-                                <span className="text-[10px] uppercase tracking-wider bg-white/5 border border-white/10 px-2 py-1 rounded text-slate-300">
-                                    Fatura
-                                </span>
-                            </div>
-                            <div className="space-y-3">
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-slate-400">Utilizado</span>
-                                    <span className="font-medium text-purple-300 drop-shadow-[0_0_5px_rgba(217,70,239,0.5)]">{formatBRL(card.limit_used)}</span>
-                                </div>
-                                <div className="h-2 bg-slate-800 rounded-full overflow-hidden border border-white/5">
-                                    <div
-                                        className="h-full bg-gradient-to-r from-purple-600 to-fuchsia-500 shadow-[0_0_10px_rgba(217,70,239,0.5)]"
-                                        style={{ width: `${Math.min((card.limit_used / card.credit_limit) * 100, 100)}%` }}
-                                    />
-                                </div>
-                                <div className="flex justify-between text-xs text-slate-500 pt-1">
-                                    <span>Disponível <span className="text-slate-300">{formatBRL(card.limit_available)}</span></span>
-                                    <span>Limite {formatBRL(card.credit_limit)}</span>
-                                </div>
-                            </div>
+                        <div className="grid gap-4">
+                            {cardUtilizations.map(card => {
+                                const percentage = Math.min((card.limit_used / card.credit_limit) * 100, 100)
+                                const isHighUsage = percentage > 80
+
+                                return (
+                                    <div key={card.id} className="relative group bg-white rounded-2xl p-5 border border-slate-100 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-5px_rgba(0,0,0,0.1)] transition-all duration-300">
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isHighUsage ? 'bg-rose-50 text-rose-500' : 'bg-indigo-50 text-indigo-500'}`}>
+                                                    <CreditCard size={20} />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-slate-800">{card.name}</p>
+                                                    <p className="text-xs text-slate-400 font-medium tracking-wide">**** **** 1234</p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Fatura Atual</p>
+                                                <p className="font-bold text-slate-900 text-lg">{formatBRL(card.limit_used)}</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Progress Bar */}
+                                        <div className="space-y-2">
+                                            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full rounded-full transition-all duration-1000 ease-out ${isHighUsage ? 'bg-rose-500' : 'bg-indigo-500'}`}
+                                                    style={{ width: `${percentage}%` }}
+                                                />
+                                            </div>
+                                            <div className="flex justify-between text-xs font-medium">
+                                                <span className={isHighUsage ? 'text-rose-500' : 'text-indigo-500'}>{percentage.toFixed(0)}% Utilizado</span>
+                                                <span className="text-slate-400">Disp: {formatBRL(card.limit_available)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
                         </div>
                     </div>
-                ))}
+                )}
 
+                {/* Accounts Placeholder if empty */}
                 {accounts.length === 0 && (
-                    <div className="p-8 text-center border border-dashed border-white/10 rounded-2xl mt-4 bg-white/5">
-                        <p className="text-slate-400 mb-2">Nenhuma conta cadastrada</p>
-                        <p className="text-sm text-slate-500">Cadastre contas e cartões em Ajustes</p>
+                    <div className="border border-dashed border-slate-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-slate-50/50">
+                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-slate-300 shadow-sm mb-4">
+                            <Wallet size={32} />
+                        </div>
+                        <h3 className="text-slate-900 font-semibold mb-1">Nenhuma conta</h3>
+                        <p className="text-slate-500 text-sm mb-4">Adicione suas contas bancárias para ver o fluxo.</p>
+                        <button className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-xl shadow-lg shadow-indigo-500/20 transition-all flex items-center gap-2">
+                            <Plus size={16} />
+                            Adicionar Conta
+                        </button>
                     </div>
                 )}
             </div>
