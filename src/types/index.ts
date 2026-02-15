@@ -4,6 +4,7 @@ export type Profile = {
     full_name: string
     role: UserRole
     created_at: string
+    avatar_url?: string
 }
 
 // Add other shared types here
