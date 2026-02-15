@@ -8,7 +8,7 @@ import { TransactionFormModal } from '../transactions/TransactionFormModal'
 type TransactionType = 'income' | 'expense' | 'transfer' | 'credit_card'
 
 export function Navbar() {
-    const { signOut } = useAuth()
+    const { signOut, profile } = useAuth()
     const location = useLocation()
     const [isGlassMenuOpen, setIsGlassMenuOpen] = useState(false)
     const [formType, setFormType] = useState<TransactionType | null>(null)
@@ -78,26 +78,46 @@ export function Navbar() {
                             </button>
                         </div>
 
-                        {/* Last 2 items */}
-                        {navItems.slice(2).map(({ to, icon: Icon, label }) => (
-                            <NavLink
-                                key={to}
-                                to={to}
-                                className={({ isActive }) =>
-                                    `flex flex-col items-center justify-center w-full h-full transition-colors ${isActive
-                                        ? 'text-primary text-glow'
-                                        : 'text-slate-500 dark:text-slate-400 hover:text-foreground'
-                                    }`
-                                }
-                            >
-                                {({ isActive }) => (
-                                    <>
-                                        <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
-                                        <span className="text-[10px] font-medium mt-1">{label}</span>
-                                    </>
-                                )}
-                            </NavLink>
-                        ))}
+                        {/* Last item (Budget) */}
+                        <NavLink
+                            to="/budgets"
+                            className={({ isActive }) =>
+                                `flex flex-col items-center justify-center w-full h-full transition-colors ${isActive
+                                    ? 'text-primary text-glow'
+                                    : 'text-slate-500 dark:text-slate-400 hover:text-foreground'
+                                }`
+                            }
+                        >
+                            {({ isActive }) => (
+                                <>
+                                    <PieChart size={24} strokeWidth={isActive ? 2.5 : 2} />
+                                    <span className="text-[10px] font-medium mt-1">Orçamentos</span>
+                                </>
+                            )}
+                        </NavLink>
+
+                        {/* Settings / Profile Avatar */}
+                        <NavLink
+                            to="/settings"
+                            className={({ isActive }) =>
+                                `flex flex-col items-center justify-center w-full h-full transition-colors group ${isActive ? 'text-primary' : 'text-slate-500 dark:text-slate-400'}`
+                            }
+                        >
+                            {({ isActive }) => (
+                                <>
+                                    <div className={`w-6 h-6 flex items-center justify-center rounded-full overflow-hidden border-2 transition-all ${isActive ? 'border-primary' : 'border-transparent group-hover:border-slate-300'}`}>
+                                        {profile?.avatar_url ? (
+                                            <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className={`w-full h-full flex items-center justify-center text-[10px] font-bold uppercase ${isActive ? 'bg-primary text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}>
+                                                {profile?.full_name?.charAt(0) || <Settings size={14} />}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <span className="text-[10px] font-medium mt-1">Perfil</span>
+                                </>
+                            )}
+                        </NavLink>
                     </div>
                 </nav>
             )}

@@ -11,6 +11,7 @@ export function Dashboard() {
     const {
         availableNow,
         projectedBalance,
+        monthlyFlow,
         cardUtilizations,
         monthlyCumulativeBalance
     } = useFinanceEngine({
@@ -39,6 +40,7 @@ export function Dashboard() {
                 onDateChange={setSelectedDate}
                 availableNow={availableNow}
                 projectedBalance={projectedBalance}
+                monthlyFlow={monthlyFlow}
                 monthlyData={monthlyCumulativeBalance}
             />
 

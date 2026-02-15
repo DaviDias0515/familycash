@@ -89,12 +89,6 @@ export function useFinanceEngine({ accounts, transactions, cards, statements, ta
         monthlyTx.forEach(t => {
             const day = new Date(t.date + 'T12:00:00').getDate()
             const current = dailyFlow.get(day) || 0
-
-            // Income is positive, Expense is negative. 
-            // Assuming amount in DB is: Income (+), Expense (-). 
-            // If expense is stored as positive with type 'expense', I need to check category kind. 
-            // But usually amount is signed? Let's check `Transaction` type or usage.
-            // In `accountBalances` calculation: `sum + Number(t.amount)`. So amount is signed.
             dailyFlow.set(day, current + Number(t.amount))
         })
 
@@ -111,6 +105,19 @@ export function useFinanceEngine({ accounts, transactions, cards, statements, ta
 
         return data
 
+    }, [transactions, targetDate])
+
+    // 2.5 Balanço Mensal (Fluxo Líquido do Mês) - NOVO
+    const monthlyFlow = useMemo(() => {
+        const year = targetDate.getFullYear()
+        const month = targetDate.getMonth()
+
+        return transactions
+            .filter(t => {
+                const d = new Date(t.date + 'T12:00:00')
+                return d.getFullYear() === year && d.getMonth() === month && t.status !== 'estornado'
+            })
+            .reduce((sum, t) => sum + Number(t.amount), 0)
     }, [transactions, targetDate])
 
 
@@ -137,6 +144,7 @@ export function useFinanceEngine({ accounts, transactions, cards, statements, ta
         cardUtilizations,
         projectedBalance,
         monthlyCumulativeBalance,
+        monthlyFlow,
         getStatementDateForTransaction
     }
 }

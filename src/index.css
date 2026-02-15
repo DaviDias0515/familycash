@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: 'Inter', sans-serif;
@@ -58,7 +59,7 @@
   --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
 
   /* Glass Effect Base */
-  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg: rgba(255, 255, 255, 0.6);
   --glass-border: rgba(255, 255, 255, 0.5);
 }
 
