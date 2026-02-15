@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, Tag, Check, ChevronDown, Grid, Palette } from 'lucide-react'
+import { X, Tag, ChevronDown, Grid, Palette } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../contexts/AuthContext'
 import { Button, Input } from '../ui'
@@ -157,8 +157,8 @@ export function CategoryFormModal({ isOpen, onClose, onSuccess, categoryToEdit }
                                         type="button"
                                         onClick={() => setKind(t)}
                                         className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${kind === t
-                                                ? t === 'income' ? 'bg-emerald-500/20 text-emerald-400 shadow-sm' : 'bg-rose-500/20 text-rose-400 shadow-sm'
-                                                : 'text-slate-500 hover:text-white hover:bg-white/5'
+                                            ? t === 'income' ? 'bg-emerald-500/20 text-emerald-400 shadow-sm' : 'bg-rose-500/20 text-rose-400 shadow-sm'
+                                            : 'text-slate-500 hover:text-white hover:bg-white/5'
                                             }`}
                                     >
                                         {t === 'income' ? 'Receita' : 'Despesa'}

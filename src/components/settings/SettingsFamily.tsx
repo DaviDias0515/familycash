@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Users, ChevronLeft, User, Copy, Check } from 'lucide-react'
+import { Users, ChevronLeft, User, Copy, Check } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui'
 import { useFamilyData } from '../../hooks/useFamilyData'

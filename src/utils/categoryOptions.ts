@@ -1,9 +1,8 @@
 import {
     Home, ShoppingCart, Car, Utensils, Zap, Wifi, Phone,
     Briefcase, GraduationCap, Heart, Plane, Gift,
-    PiggyBank, ArrowUpCircle, ArrowDownCircle, AlertCircle,
-    Music, Video, Gamepad2, Book, Smile, Coffee, Shirt,
-    Baby, Dog, Landmark, CreditCard, DollarSign
+    PiggyBank, Music, Gamepad2, Shirt,
+    Baby, Dog, Landmark, DollarSign
 } from 'lucide-react'
 
 export const CATEGORY_ICONS = [
