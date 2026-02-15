@@ -13,34 +13,27 @@ Design System focado em estética **High-End (Aura Style)**. Este documento trad
 
 ---
 
-## 3. PALETA DE CORES (VALORES → TOKENS)
+### Paleta de Cores (Tokens Semânticos - Light / Dark)
 
-### Texto
-* **text-primary**: `#0F172A` (Slate 900 - Contraste máximo)
-* **text-secondary**: `#475569` (Slate 600 - Texto de apoio)
-* **text-muted**: `#94A3B8` (Slate 400 - Placeholders)
-* **text-on-dark**: `#F8FAFC` (Slate 50)
-* **text-on-brand**: `#FFFFFF` (Branco puro)
+| Token | Light Mode (Default) | Dark Mode |
+| :--- | :--- | :--- |
+| **`--background`** | `#F8FAFC` (Slate 50) | `#020617` (Slate 950) |
+| **`--foreground`** | `#0F172A` (Slate 900) | `#F8FAFC` (Slate 50) |
+| **`--surface`** | `#FFFFFF` (White) | `#0f172A` (Slate 900) |
+| **`--surface-subtle`** | `#F1F5F9` (Slate 100) | `#1E293B` (Slate 800) |
+| **`--primary`** | `#6366F1` (Indigo 500) | `#818CF8` (Indigo 400) |
+| **`--border`** | `rgba(15, 23, 42, 0.08)` | `rgba(255, 255, 255, 0.1)` |
 
 ### Superfícies (Aura Layers)
-* **surface-page**: `#F8FAFC` (Fundo limpo com mesh gradient opcional)
-* **surface-section**: `#F1F5F9` (Separação de blocos)
-* **surface-card**: `rgba(255, 255, 255, 0.6)` (Glassmorphism + Blur)
-* **surface-subtle**: `rgba(241, 245, 249, 0.5)`
-* **surface-elevated**: `#FFFFFF` (Z-index superior)
+* **surface-page**: Fundo base da aplicação.
+* **surface-card**: Camada de cartão com efeito Glassmorphism (`glass-aura`).
+* **surface-elevated**: Elementos flutuantes (modais, dropdowns).
 
 ### Ações (Vibrant Accents)
 * **action-primary**: `#6366F1` (Indigo Aura)
 * **action-primary-hover**: `#4F46E5`
 * **action-primary-active**: `#4338CA`
-* **action-secondary**: `surface-card`
-* **action-strong**: `#0F172A` (Estilo Linear/Dark)
-* **action-strong-hover**: `#1E293B`
 
-### Bordas
-* **border-default**: `rgba(15, 23, 42, 0.08)`
-* **border-subtle**: `rgba(15, 23, 42, 0.04)`
-* **border-focus**: `#6366F1`
 
 ---
 

@@ -3,7 +3,7 @@
 @theme {
   --font-sans: 'Inter', sans-serif;
 
-  /* Aura Palette */
+  /* Aura Palette - Shared Colors */
   --color-slate-50: #F8FAFC;
   --color-slate-100: #F1F5F9;
   --color-slate-200: #E2E8F0;
@@ -19,48 +19,100 @@
   --color-indigo-500: #6366F1;
   --color-indigo-600: #4F46E5;
 
-  /* Semantic Tokens */
-  --color-background: var(--color-slate-50);
-  --color-foreground: var(--color-slate-900);
+  /* Semantic Tokens - Mapped to CSS Variables */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 
-  --color-surface: #FFFFFF;
-  --color-surface-subtle: var(--color-slate-50);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
 
-  --color-primary: var(--color-indigo-500);
-  --color-primary-foreground: #FFFFFF;
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
 
-  --color-border: rgba(15, 23, 42, 0.08);
-  --color-border-subtle: rgba(15, 23, 42, 0.04);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
 }
 
 :root {
+  /* LIGHT MODE (Default) */
+  --background: #F8FAFC;
+  /* Slate-50 */
+  --foreground: #0F172A;
+  /* Slate-900 */
+
+  --surface: #FFFFFF;
+  --surface-subtle: #F1F5F9;
+  /* Slate-100 */
+
+  --primary: #6366F1;
+  /* Indigo-500 */
+  --primary-foreground: #FFFFFF;
+
+  --border: rgba(15, 23, 42, 0.08);
+  /* Light Border */
+  --border-subtle: rgba(15, 23, 42, 0.04);
+
   /* Aura Shadows */
   --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.04);
   --shadow-button: 0 4px 12px rgba(99, 102, 241, 0.3);
   --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
+
+  /* Glass Effect Base */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+}
+
+.dark {
+  /* DARK MODE overrides */
+  --background: #020617;
+  /* Slate-950 */
+  --foreground: #F8FAFC;
+  /* Slate-50 */
+
+  --surface: #0F172A;
+  /* Slate-900 */
+  --surface-subtle: #1E293B;
+  /* Slate-800 */
+
+  --primary: #818CF8;
+  /* Indigo-400 (Lighter for dark mode) */
+  --primary-foreground: #FFFFFF;
+
+  --border: rgba(255, 255, 255, 0.1);
+  /* White/10 */
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Aura Shadows (Dark) */
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.3);
+  --shadow-button: 0 4px 12px rgba(99, 102, 241, 0.4);
+  --shadow-float: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+
+  /* Glass Effect Dark */
+  --glass-bg: rgba(15, 23, 42, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 @layer utilities {
   .glass-aura {
-    @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-sm;
+    @apply bg-[var(--glass-bg)] backdrop-blur-xl border border-[var(--glass-border)] shadow-sm;
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-card);
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-slate-100 dark:to-slate-400;
   }
 }
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-900;
+    @apply bg-background text-foreground font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200 transition-colors duration-300;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

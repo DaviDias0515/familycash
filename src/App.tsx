@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
+import { ThemeProvider } from './contexts/ThemeContext'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import { AppShell } from './components/layout/AppShell'
 import { Dashboard } from './pages/Dashboard'
@@ -18,33 +19,35 @@ import { SettingsAccountCreate } from './components/settings/SettingsAccountCrea
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/onboarding" element={<Onboarding />} />
+    <ThemeProvider defaultTheme="system" storageKey="family-cash-ui-theme">
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/onboarding" element={<Onboarding />} />
 
-          <Route element={
-            <ProtectedRoute>
-              <AppShell />
-            </ProtectedRoute>
-          }>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/timeline" element={<Timeline />} />
-            <Route path="/budgets" element={<Budgets />} />
-            <Route path="/settings" element={<Settings />}>
-              <Route index element={<SettingsMenu />} />
-              <Route path="categories" element={<SettingsCategories />} />
-              <Route path="cards" element={<SettingsCards />} />
-              <Route path="accounts" element={<SettingsAccounts />} />
-              <Route path="accounts/new" element={<SettingsAccountCreate />} />
-              <Route path="family" element={<SettingsFamily />} />
+            <Route element={
+              <ProtectedRoute>
+                <AppShell />
+              </ProtectedRoute>
+            }>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/timeline" element={<Timeline />} />
+              <Route path="/budgets" element={<Budgets />} />
+              <Route path="/settings" element={<Settings />}>
+                <Route index element={<SettingsMenu />} />
+                <Route path="categories" element={<SettingsCategories />} />
+                <Route path="cards" element={<SettingsCards />} />
+                <Route path="accounts" element={<SettingsAccounts />} />
+                <Route path="accounts/new" element={<SettingsAccountCreate />} />
+                <Route path="family" element={<SettingsFamily />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 
