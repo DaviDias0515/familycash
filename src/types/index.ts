@@ -62,6 +62,7 @@ export interface Category {
     kind: CategoryKind
     icon?: string
     color?: string
+    parent_id?: string | null
 }
 
 export interface Budget {
