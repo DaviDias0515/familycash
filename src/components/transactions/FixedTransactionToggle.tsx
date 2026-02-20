@@ -23,26 +23,26 @@ export function FixedTransactionToggle({ isFixed, onToggle, color = 'emerald' }:
         <div
             onClick={() => onToggle(!isFixed)}
             className={`
-                w-full flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer button-press
+                w-full flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer button-press group
                 ${isFixed
-                    ? 'bg-surface border-white/20 opacity-100 shadow-lg shadow-black/20'
-                    : 'bg-transparent border-white/5 opacity-60 hover:opacity-100 hover:bg-white/5'
+                    ? 'bg-surface border-border opacity-100 shadow-sm'
+                    : 'bg-transparent border-border opacity-60 hover:opacity-100 hover:bg-surface-subtle'
                 }
             `}
         >
             <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-full transition-colors ${isFixed ? 'bg-white/10 text-white' : 'bg-transparent text-slate-500'}`}>
+                <div className={`p-2 rounded-full transition-colors ${isFixed ? 'bg-surface-subtle text-foreground' : 'bg-transparent text-slate-500'}`}>
                     <Repeat size={20} />
                 </div>
-                <span className={`font-medium transition-colors ${isFixed ? 'text-white' : 'text-slate-400'}`}>
+                <span className={`font-medium transition-colors ${isFixed ? 'text-foreground' : 'text-slate-400 group-hover:text-foreground'}`}>
                     Transação Fixa
                 </span>
             </div>
 
             {/* Switch UI */}
-            <div className={`w-12 h-7 rounded-full transition-colors relative flex items-center ${isFixed ? 'bg-white/20' : 'bg-white/5 border border-white/10'}`}>
+            <div className={`w-12 h-7 rounded-full transition-colors relative flex items-center ${isFixed ? 'bg-surface-subtle border border-border' : 'bg-surface-subtle/50 border border-border'}`}>
                 <div
-                    className={`w-5 h-5 rounded-full absolute transition-all duration-300 shadow-sm ${isFixed ? `right-1 ${activeClass} shadow-[0_0_10px_currentColor]` : 'left-1 bg-slate-500'}`}
+                    className={`w-5 h-5 rounded-full absolute transition-all duration-300 shadow-sm ${isFixed ? `right-1 ${activeClass} shadow-[0_0_10px_currentColor]` : 'left-1 bg-slate-400'}`}
                 />
             </div>
         </div>

@@ -1,27 +1,22 @@
 import { useState, useEffect } from 'react'
-import { Search, X, Tag, Check, ChevronRight } from 'lucide-react'
-import { supabase } from '../../lib/supabase'
-import { useAuth } from '../../contexts/AuthContext'
-import type { Category } from '../../types'
+import { Search, X, Check, Wallet, ChevronRight } from 'lucide-react'
+import type { Account } from '../../types'
 
-interface CategoryPickerDrawerProps {
+interface AccountPickerDrawerProps {
     isOpen: boolean
     onClose: () => void
-    onSelect: (category: Category) => void
-    selectedCategoryId?: string
-    type?: 'income' | 'expense' | 'credit_card' | 'transfer'
+    onSelect: (account: Account) => void
+    selectedAccountId?: string
+    accounts: Account[]
+    title?: string
 }
 
-export function CategoryPickerDrawer({ isOpen, onClose, onSelect, selectedCategoryId, type }: CategoryPickerDrawerProps) {
-    const { profile } = useAuth()
-    const [categories, setCategories] = useState<Category[]>([])
+export function AccountPickerDrawer({ isOpen, onClose, onSelect, selectedAccountId, accounts, title = 'Selecionar Conta' }: AccountPickerDrawerProps) {
     const [search, setSearch] = useState('')
     const [isVisible, setIsVisible] = useState(false)
-    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (isOpen) {
-            fetchCategories()
             // Delay to allow mount before transition
             requestAnimationFrame(() => setIsVisible(true))
         } else {
@@ -30,19 +25,6 @@ export function CategoryPickerDrawer({ isOpen, onClose, onSelect, selectedCatego
         }
     }, [isOpen])
 
-    const fetchCategories = async () => {
-        if (!profile?.family_id) return
-        setLoading(true)
-        const { data } = await supabase
-            .from('categories')
-            .select('*')
-            .eq('family_id', profile.family_id)
-            .order('name')
-
-        if (data) setCategories(data)
-        setLoading(false)
-    }
-
     if (!isOpen && !isVisible) return null
 
     const handleClose = () => {
@@ -50,27 +32,15 @@ export function CategoryPickerDrawer({ isOpen, onClose, onSelect, selectedCatego
         setTimeout(onClose, 300)
     }
 
-    const filtered = categories.filter(c => {
-        const matchesSearch = c.name.toLowerCase().includes(search.toLowerCase())
+    const filtered = accounts.filter(acc =>
+        acc.name.toLowerCase().includes(search.toLowerCase())
+    )
 
-        // Filter by type if provided
-        let matchesType = true
-        if (type) {
-            if (type === 'income') matchesType = c.kind === 'income'
-            else if (type === 'expense') matchesType = c.kind === 'expense'
-            else if (type === 'credit_card') matchesType = c.kind === 'expense' // Credit card purchases are expenses
-            // For transfer, we might want to show all or specific ones, mostly 'transfer' if it exists or generic.
-            // Assuming strict mapping for now based on user request.
-        }
-
-        return matchesSearch && matchesType
-    })
-
-    const colors: Record<string, string> = {
-        income: 'text-emerald-500 bg-emerald-500/10 dark:text-emerald-400',
-        expense: 'text-rose-500 bg-rose-500/10 dark:text-rose-400',
-        credit_card: 'text-amber-500 bg-amber-500/10 dark:text-amber-400',
-        transfer: 'text-cyan-500 bg-cyan-500/10 dark:text-cyan-400'
+    const typeColors: Record<string, string> = {
+        corrente: 'bg-emerald-500/10 text-emerald-500 dark:text-emerald-400',
+        poupanca: 'bg-blue-500/10 text-blue-500 dark:text-blue-400',
+        investimento: 'bg-indigo-500/10 text-indigo-500 dark:text-indigo-400',
+        dinheiro: 'bg-green-500/10 text-green-500 dark:text-green-400'
     }
 
     return (
@@ -95,7 +65,7 @@ export function CategoryPickerDrawer({ isOpen, onClose, onSelect, selectedCatego
 
                 {/* Header */}
                 <div className="p-6 pb-2 flex items-center justify-between">
-                    <h3 className="text-xl font-bold tracking-tight text-foreground">Selecionar Categoria</h3>
+                    <h3 className="text-xl font-bold tracking-tight text-foreground">{title}</h3>
                     <button
                         onClick={handleClose}
                         className="p-2 -mr-2 text-slate-400 hover:text-foreground rounded-full hover:bg-surface-subtle/50 transition-colors"
@@ -110,7 +80,7 @@ export function CategoryPickerDrawer({ isOpen, onClose, onSelect, selectedCatego
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={20} />
                         <input
                             type="text"
-                            placeholder="Buscar categoria..."
+                            placeholder="Buscar conta..."
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             className="
@@ -130,23 +100,18 @@ export function CategoryPickerDrawer({ isOpen, onClose, onSelect, selectedCatego
 
                 {/* List */}
                 <div className="flex-1 overflow-y-auto px-6 pb-8 space-y-3 scrollbar-hide">
-                    {loading ? (
-                        <div className="text-center py-20 text-slate-500 animate-pulse flex flex-col items-center gap-3">
-                            <div className="w-8 h-8 rounded-full border-2 border-slate-300 border-t-indigo-500 animate-spin" />
-                            <span className="text-sm font-medium">Carregando...</span>
-                        </div>
-                    ) : filtered.length === 0 ? (
+                    {filtered.length === 0 ? (
                         <div className="text-center py-20 text-slate-500">
-                            {type ? `Nenhuma categoria de ${type === 'income' ? 'Receita' : 'Despesa'} encontrada.` : 'Nenhuma categoria encontrada.'}
+                            Nenhuma conta encontrada.
                         </div>
                     ) : (
-                        filtered.map(cat => {
-                            const isSelected = selectedCategoryId === cat.id
+                        filtered.map(acc => {
+                            const isSelected = selectedAccountId === acc.id
                             return (
                                 <button
-                                    key={cat.id}
+                                    key={acc.id}
                                     onClick={() => {
-                                        onSelect(cat)
+                                        onSelect(acc)
                                         handleClose()
                                     }}
                                     className={`
@@ -160,13 +125,16 @@ export function CategoryPickerDrawer({ isOpen, onClose, onSelect, selectedCatego
                                     <div className="flex items-center gap-4">
                                         <div className={`
                                             p-3 rounded-xl transition-transform duration-300 group-hover:scale-110
-                                            ${colors[cat.kind] || 'bg-slate-100 text-slate-400 dark:bg-slate-800'}
+                                            ${typeColors[acc.type] || 'bg-slate-100 text-slate-400 dark:bg-slate-800'}
                                         `}>
-                                            <Tag size={20} />
+                                            <Wallet size={20} />
                                         </div>
                                         <div className="text-left">
                                             <span className={`block text-base font-semibold ${isSelected ? 'text-indigo-600 dark:text-indigo-400' : 'text-foreground'}`}>
-                                                {cat.name}
+                                                {acc.name}
+                                            </span>
+                                            <span className="text-xs text-slate-400 capitalize">
+                                                {acc.type}
                                             </span>
                                         </div>
                                     </div>
